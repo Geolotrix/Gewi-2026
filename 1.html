@@ -1,0 +1,2048 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta name="x-poe-datastore-behavior" content="local_only">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Nil-Staudamm-Konflikt</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+    <style>
+        :root {
+            --system-background: #F2F2F7;
+            --secondary-background: #FFFFFF;
+            --tertiary-background: #F2F2F7;
+
+            --glass-ultra-thin: rgba(255, 255, 255, 0.42);
+            --glass-thin: rgba(255, 255, 255, 0.52);
+            --glass-regular: rgba(255, 255, 255, 0.68);
+            --glass-thick: rgba(255, 255, 255, 0.82);
+            --glass-chrome: rgba(255, 255, 255, 0.92);
+
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --glass-inner-glow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+
+            --label-primary: rgba(0, 0, 0, 0.85);
+            --label-secondary: rgba(60, 60, 67, 0.6);
+            --label-tertiary: rgba(60, 60, 67, 0.33);
+            --label-quaternary: rgba(60, 60, 67, 0.18);
+
+            --system-blue: #007AFF;
+            --system-green: #34C759;
+            --system-orange: #FF9500;
+            --system-red: #FF3B30;
+            --system-purple: #AF52DE;
+            --system-teal: #32ADE6;
+            --system-indigo: #5856D6;
+            --system-cyan: #00C7BE;
+
+            --fill-primary: rgba(120, 120, 128, 0.2);
+            --fill-secondary: rgba(120, 120, 128, 0.16);
+            --fill-tertiary: rgba(120, 120, 128, 0.12);
+            --fill-quaternary: rgba(120, 120, 128, 0.08);
+
+            --separator: rgba(60, 60, 67, 0.1);
+            --separator-opaque: #C6C6C8;
+
+            --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.06), 0 0.5px 1px rgba(0, 0, 0, 0.04);
+            --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.04);
+            --shadow-large: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+            --shadow-elevated: 0 16px 48px rgba(0, 0, 0, 0.16), 0 4px 16px rgba(0, 0, 0, 0.08);
+
+            --blur-regular: 20px;
+            --blur-prominent: 30px;
+            --blur-ultra: 50px;
+
+            --space-1: 4px;
+            --space-2: 8px;
+            --space-3: 12px;
+            --space-4: 16px;
+            --space-5: 20px;
+            --space-6: 24px;
+            --space-8: 32px;
+            --space-10: 40px;
+            --space-12: 48px;
+
+            --radius-xs: 6px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+            --radius-full: 9999px;
+
+            --font-system: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-weight-regular: 400;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+
+            --duration-fast: 200ms;
+            --duration-normal: 300ms;
+            --duration-slow: 450ms;
+            --easing-default: cubic-bezier(0.25, 0.1, 0.25, 1);
+            --easing-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+            --z-base: 1;
+            --z-fixed: 300;
+            --z-modal-backdrop: 400;
+            --z-modal: 500;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --system-background: #000000;
+                --secondary-background: #1C1C1E;
+                --tertiary-background: #2C2C2E;
+
+                --glass-ultra-thin: rgba(40, 40, 44, 0.5);
+                --glass-thin: rgba(44, 44, 48, 0.6);
+                --glass-regular: rgba(50, 50, 54, 0.72);
+                --glass-thick: rgba(56, 56, 60, 0.85);
+                --glass-chrome: rgba(62, 62, 66, 0.95);
+
+                --glass-border: rgba(255, 255, 255, 0.1);
+                --glass-inner-glow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+                --label-primary: rgba(255, 255, 255, 0.92);
+                --label-secondary: rgba(235, 235, 245, 0.6);
+                --label-tertiary: rgba(235, 235, 245, 0.33);
+                --label-quaternary: rgba(235, 235, 245, 0.18);
+
+                --fill-primary: rgba(120, 120, 128, 0.36);
+                --fill-secondary: rgba(120, 120, 128, 0.32);
+                --fill-tertiary: rgba(120, 120, 128, 0.24);
+                --fill-quaternary: rgba(120, 120, 128, 0.18);
+
+                --separator: rgba(84, 84, 88, 0.65);
+                --separator-opaque: #38383A;
+
+                --shadow-small: 0 2px 8px rgba(0, 0, 0, 0.24);
+                --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.32);
+                --shadow-large: 0 8px 32px rgba(0, 0, 0, 0.4);
+                --shadow-elevated: 0 16px 48px rgba(0, 0, 0, 0.5);
+            }
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-system);
+            background: var(--system-background);
+            color: var(--label-primary);
+            line-height: 1.47;
+            overflow: hidden;
+            height: 100vh;
+            height: 100dvh;
+        }
+
+        button {
+            font-family: inherit;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        .glass {
+            background: var(--glass-regular);
+            backdrop-filter: blur(var(--blur-regular)) saturate(180%);
+            -webkit-backdrop-filter: blur(var(--blur-regular)) saturate(180%);
+            border: 0.5px solid var(--glass-border);
+            box-shadow: var(--shadow-medium), var(--glass-inner-glow);
+        }
+
+        .glass-thick {
+            background: var(--glass-thick);
+            backdrop-filter: blur(var(--blur-prominent)) saturate(200%);
+            -webkit-backdrop-filter: blur(var(--blur-prominent)) saturate(200%);
+            border: 0.5px solid var(--glass-border);
+            box-shadow: var(--shadow-large), var(--glass-inner-glow);
+        }
+
+        .glass-chrome {
+            background: var(--glass-chrome);
+            backdrop-filter: blur(var(--blur-ultra)) saturate(220%);
+            -webkit-backdrop-filter: blur(var(--blur-ultra)) saturate(220%);
+            border: 0.5px solid var(--glass-border);
+            box-shadow: var(--shadow-elevated), var(--glass-inner-glow);
+        }
+
+        #map {
+            position: fixed;
+            inset: 0;
+            z-index: var(--z-base);
+        }
+
+        /* Kompakte Sidebar */
+        .sidebar {
+            position: fixed;
+            top: var(--space-5);
+            left: var(--space-5);
+            width: 220px;
+            border-radius: var(--radius-xl);
+            z-index: var(--z-fixed);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            max-height: calc(100vh - 40px);
+            transition: transform var(--duration-slow) var(--easing-default),
+                opacity var(--duration-normal) var(--easing-default);
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(calc(-100% - var(--space-5)));
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-3);
+        }
+
+        .sidebar-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar-content::-webkit-scrollbar-thumb {
+            background: var(--fill-tertiary);
+            border-radius: var(--radius-full);
+        }
+
+        .sidebar-section {
+            margin-bottom: var(--space-3);
+        }
+
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.625rem;
+            font-weight: var(--font-weight-semibold);
+            color: var(--label-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: var(--space-1) var(--space-2);
+            margin-bottom: var(--space-1);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2);
+            border-radius: var(--radius-md);
+            transition: background var(--duration-fast) var(--easing-default),
+                transform var(--duration-fast) var(--easing-default);
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: var(--fill-quaternary);
+        }
+
+        .nav-item:active {
+            background: var(--fill-tertiary);
+            transform: scale(0.98);
+        }
+
+        .nav-item.active {
+            background: var(--fill-secondary);
+        }
+
+        .nav-item-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .nav-item-icon svg {
+            width: 14px;
+            height: 14px;
+            color: white;
+        }
+
+        .nav-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .nav-item-title {
+            font-size: 0.8125rem;
+            font-weight: var(--font-weight-medium);
+            color: var(--label-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nav-item-description {
+            font-size: 0.6875rem;
+            color: var(--label-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Map Controls */
+        .map-controls {
+            position: fixed;
+            top: var(--space-5);
+            right: var(--space-5);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+            z-index: var(--z-fixed);
+        }
+
+        .control-group {
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .control-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            color: var(--label-primary);
+            transition: background var(--duration-fast) var(--easing-default),
+                transform var(--duration-fast) var(--easing-default);
+        }
+
+        .control-button:hover {
+            background: var(--fill-tertiary);
+        }
+
+        .control-button:active {
+            background: var(--fill-secondary);
+            transform: scale(0.94);
+        }
+
+        .control-button.active {
+            background: var(--system-blue);
+            color: white;
+        }
+
+        .control-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .control-divider {
+            height: 0.5px;
+            background: var(--separator);
+        }
+
+        .zoom-controls {
+            position: fixed;
+            bottom: var(--space-8);
+            right: var(--space-5);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            z-index: var(--z-fixed);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: var(--space-5);
+            left: var(--space-5);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-lg);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: var(--z-modal);
+            transition: transform var(--duration-fast) var(--easing-default);
+        }
+
+        .sidebar-toggle:active {
+            transform: scale(0.94);
+        }
+
+        .sidebar-toggle svg {
+            width: 20px;
+            height: 20px;
+            color: var(--label-primary);
+        }
+
+        /* Tour Button */
+        .tour-button {
+            position: fixed;
+            bottom: var(--space-6);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-5);
+            border-radius: var(--radius-full);
+            z-index: var(--z-fixed);
+            transition: transform var(--duration-fast) var(--easing-default),
+                opacity var(--duration-fast) var(--easing-default);
+        }
+
+        .tour-button:hover {
+            transform: translateX(-50%) scale(1.03);
+        }
+
+        .tour-button:active {
+            transform: translateX(-50%) scale(0.97);
+        }
+
+        .tour-button.playing {
+            background: var(--system-blue);
+            color: white;
+        }
+
+        .tour-button svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .tour-button-text {
+            font-size: 0.8125rem;
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .tour-progress {
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            gap: var(--space-1);
+        }
+
+        .tour-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: var(--radius-full);
+            background: var(--fill-tertiary);
+            transition: background var(--duration-fast) var(--easing-default),
+                transform var(--duration-fast) var(--easing-default);
+        }
+
+        .tour-dot.active {
+            background: var(--system-blue);
+            transform: scale(1.3);
+        }
+
+        .tour-dot.visited {
+            background: var(--label-tertiary);
+        }
+
+        /* Info Panel - Rechte Seite */
+        .info-panel {
+            position: fixed;
+            top: var(--space-5);
+            right: var(--space-5);
+            bottom: var(--space-5);
+            width: 340px;
+            border-radius: var(--radius-2xl);
+            z-index: var(--z-modal);
+            transform: translateX(calc(100% + var(--space-5)));
+            opacity: 0;
+            transition: transform var(--duration-slow) var(--easing-spring),
+                opacity var(--duration-normal) var(--easing-default);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .info-panel.visible {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .info-panel-header {
+            padding: var(--space-4);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            border-bottom: 0.5px solid var(--separator);
+        }
+
+        .info-panel-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-small);
+        }
+
+        .info-panel-icon svg {
+            width: 22px;
+            height: 22px;
+            color: white;
+        }
+
+        .info-panel-title-group {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .info-panel-title {
+            font-size: 1.125rem;
+            font-weight: var(--font-weight-bold);
+            letter-spacing: -0.02em;
+            color: var(--label-primary);
+            line-height: 1.2;
+        }
+
+        .info-panel-location {
+            font-size: 0.75rem;
+            color: var(--label-secondary);
+            margin-top: var(--space-1);
+        }
+
+        .info-panel-close {
+            width: 26px;
+            height: 26px;
+            border-radius: var(--radius-full);
+            background: var(--fill-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background var(--duration-fast) var(--easing-default),
+                transform var(--duration-fast) var(--easing-default);
+        }
+
+        .info-panel-close:hover {
+            background: var(--fill-secondary);
+        }
+
+        .info-panel-close:active {
+            transform: scale(0.92);
+        }
+
+        .info-panel-close svg {
+            width: 10px;
+            height: 10px;
+            color: var(--label-secondary);
+        }
+
+        .info-panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-4);
+            overscroll-behavior: contain;
+        }
+
+        .info-panel-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .info-panel-content::-webkit-scrollbar-thumb {
+            background: var(--fill-tertiary);
+            border-radius: var(--radius-full);
+        }
+
+        .info-description {
+            font-size: 0.875rem;
+            line-height: 1.55;
+            color: var(--label-secondary);
+            margin-bottom: var(--space-4);
+        }
+
+        .zoom-location-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            width: 100%;
+            padding: var(--space-3);
+            background: var(--fill-secondary);
+            color: var(--label-primary);
+            border-radius: var(--radius-md);
+            font-size: 0.8125rem;
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-3);
+            transition: background var(--duration-fast) var(--easing-default),
+                transform var(--duration-fast) var(--easing-default);
+        }
+
+        .zoom-location-button:hover {
+            background: var(--fill-primary);
+        }
+
+        .zoom-location-button:active {
+            transform: scale(0.98);
+        }
+
+        .zoom-location-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .facts-card {
+            background: var(--fill-quaternary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+
+        .facts-card-title {
+            font-size: 0.625rem;
+            font-weight: var(--font-weight-semibold);
+            color: var(--system-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: var(--space-2);
+        }
+
+        .facts-list {
+            list-style: none;
+        }
+
+        .facts-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-2);
+            padding: var(--space-1) 0;
+            font-size: 0.75rem;
+            color: var(--label-primary);
+            border-bottom: 0.5px solid var(--separator);
+            line-height: 1.4;
+        }
+
+        .facts-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .facts-item::before {
+            content: '';
+            width: 4px;
+            height: 4px;
+            background: var(--system-blue);
+            border-radius: var(--radius-full);
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .expand-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            width: 100%;
+            padding: var(--space-3);
+            background: var(--system-blue);
+            color: white;
+            border-radius: var(--radius-lg);
+            font-size: 0.875rem;
+            font-weight: var(--font-weight-semibold);
+            transition: opacity var(--duration-fast) var(--easing-default),
+                transform var(--duration-fast) var(--easing-default);
+        }
+
+        .expand-button:hover {
+            opacity: 0.88;
+        }
+
+        .expand-button:active {
+            transform: scale(0.98);
+        }
+
+        .expand-button svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Detail Panel */
+        .detail-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: var(--z-modal-backdrop);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--duration-normal) var(--easing-default),
+                visibility var(--duration-normal) var(--easing-default);
+        }
+
+        .detail-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .detail-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            width: calc(100% - var(--space-8));
+            max-width: 640px;
+            max-height: calc(100vh - var(--space-12));
+            border-radius: var(--radius-2xl);
+            z-index: var(--z-modal);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--duration-normal) var(--easing-default),
+                visibility var(--duration-normal) var(--easing-default),
+                transform var(--duration-slow) var(--easing-spring);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .detail-panel.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .detail-header {
+            position: relative;
+            height: 180px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .detail-header-bg {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.7);
+        }
+
+        .detail-header-gradient {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 30%, var(--glass-chrome) 100%);
+        }
+
+        .detail-header-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-5);
+            display: flex;
+            align-items: flex-end;
+            gap: var(--space-3);
+        }
+
+        .detail-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-medium);
+            flex-shrink: 0;
+        }
+
+        .detail-icon svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+
+        .detail-title-group {
+            flex: 1;
+        }
+
+        .detail-title {
+            font-size: 1.5rem;
+            font-weight: var(--font-weight-bold);
+            color: var(--label-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+        }
+
+        .detail-subtitle {
+            font-size: 0.875rem;
+            color: var(--label-secondary);
+            margin-top: var(--space-1);
+        }
+
+        .detail-close {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            background: var(--glass-regular);
+            backdrop-filter: blur(var(--blur-regular));
+            -webkit-backdrop-filter: blur(var(--blur-regular));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--duration-fast) var(--easing-default),
+                transform var(--duration-fast) var(--easing-default);
+        }
+
+        .detail-close:hover {
+            background: var(--glass-thick);
+        }
+
+        .detail-close:active {
+            transform: scale(0.92);
+        }
+
+        .detail-close svg {
+            width: 14px;
+            height: 14px;
+            color: var(--label-primary);
+        }
+
+        .detail-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-5);
+            overscroll-behavior: contain;
+        }
+
+        .detail-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .detail-content::-webkit-scrollbar-thumb {
+            background: var(--fill-tertiary);
+            border-radius: var(--radius-full);
+        }
+
+        .detail-section {
+            margin-bottom: var(--space-5);
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-section-title {
+            font-size: 1rem;
+            font-weight: var(--font-weight-semibold);
+            color: var(--label-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .detail-section-text {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--label-secondary);
+        }
+
+        .detail-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--space-3);
+        }
+
+        .stat-card {
+            background: var(--fill-quaternary);
+            border-radius: var(--radius-md);
+            padding: var(--space-3);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: var(--font-weight-bold);
+            color: var(--label-primary);
+        }
+
+        .stat-label {
+            font-size: 0.6875rem;
+            color: var(--label-secondary);
+            margin-top: var(--space-1);
+        }
+
+        .detail-timeline {
+            position: relative;
+            padding-left: var(--space-5);
+        }
+
+        .detail-timeline::before {
+            content: '';
+            position: absolute;
+            left: 6px;
+            top: 6px;
+            bottom: 6px;
+            width: 2px;
+            background: var(--separator);
+            border-radius: var(--radius-full);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: var(--space-3);
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: calc(-1 * var(--space-5) + 3px);
+            top: 5px;
+            width: 8px;
+            height: 8px;
+            border-radius: var(--radius-full);
+            background: var(--system-blue);
+        }
+
+        .timeline-year {
+            font-size: 0.6875rem;
+            font-weight: var(--font-weight-semibold);
+            color: var(--system-blue);
+            margin-bottom: 2px;
+        }
+
+        .timeline-text {
+            font-size: 0.8125rem;
+            color: var(--label-primary);
+            line-height: 1.4;
+        }
+
+        /* RUNDE Kartenmarker - Apple Style */
+        .map-marker {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform var(--duration-normal) var(--easing-spring);
+        }
+
+        .map-marker:hover {
+            transform: scale(1.15);
+        }
+
+        .marker-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .marker-bg {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), 0 0 0 2.5px rgba(255, 255, 255, 0.95);
+            position: relative;
+        }
+
+        .marker-bg::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border-radius: var(--radius-full);
+            background: inherit;
+            opacity: 0.25;
+            animation: marker-pulse 2.5s ease-out infinite;
+        }
+
+        .marker-bg svg {
+            width: 18px;
+            height: 18px;
+            color: white;
+        }
+
+        @keyframes marker-pulse {
+            0% {
+                transform: scale(0.9);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.1;
+            }
+
+            100% {
+                transform: scale(0.9);
+                opacity: 0.3;
+            }
+        }
+
+        .leaflet-control-layers,
+        .leaflet-control-zoom,
+        .leaflet-control-attribution {
+            display: none !important;
+        }
+
+        .leaflet-popup {
+            display: none;
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 200px;
+            }
+
+            .info-panel {
+                width: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                max-width: 260px;
+                border-radius: 0 var(--radius-2xl) var(--radius-2xl) 0;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.visible {
+                transform: translateX(0);
+            }
+
+            .sidebar.collapsed {
+                transform: translateX(-100%);
+            }
+
+            .sidebar-toggle {
+                display: flex;
+            }
+
+            .map-controls {
+                top: var(--space-5);
+                right: var(--space-4);
+            }
+
+            .zoom-controls {
+                right: var(--space-4);
+                bottom: calc(var(--space-12) + 40px);
+            }
+
+            .tour-button {
+                bottom: var(--space-5);
+            }
+
+            .info-panel {
+                top: auto;
+                right: 0;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                max-height: 65vh;
+                border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+                transform: translateY(100%);
+            }
+
+            .info-panel.visible {
+                transform: translateY(0);
+            }
+
+            .info-panel::before {
+                content: '';
+                position: absolute;
+                top: var(--space-2);
+                left: 50%;
+                transform: translateX(-50%);
+                width: 36px;
+                height: 5px;
+                background: var(--fill-secondary);
+                border-radius: var(--radius-full);
+                z-index: 10;
+            }
+
+            .info-panel-header {
+                padding-top: var(--space-5);
+            }
+
+            .detail-panel {
+                top: auto;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                transform: translateY(100%) translateX(0);
+                width: 100%;
+                max-width: none;
+                max-height: 85vh;
+                border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+            }
+
+            .detail-panel.visible {
+                transform: translateY(0) translateX(0);
+            }
+
+            .detail-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @supports (padding: env(safe-area-inset-bottom)) {
+            .info-panel {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+
+            .detail-panel {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+
+            .tour-button {
+                bottom: calc(var(--space-6) + env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <button class="sidebar-toggle glass" id="sidebarToggle" aria-label="Navigation öffnen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+    </button>
+
+    <nav class="sidebar glass-thick" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Schlüsselorte</div>
+
+                <div class="nav-item" data-location="gerd">
+                    <div class="nav-item-icon" style="background: var(--system-red);">
+                        <svg viewBox="0 0 15 15" fill="currentColor">
+                            <path
+                                d="M13.94,9.5c0,0.2761-0.2239,0.5-0.5,0.5l0,0c-0.259,0.0219-0.4994,0.1439-0.67,0.34c-0.2714,0.2887-0.6175,0.4964-1,0.6c-0.6115,0.1816-1.2734,0.0424-1.76-0.37l-0.39-0.35c-0.2976-0.3038-0.7851-0.3087-1.0889-0.0111C8.5274,10.2126,8.5237,10.2163,8.52,10.22c-0.14,0.12-0.27,0.25-0.42,0.37c-0.7278,0.5784-1.7663,0.5489-2.46-0.07L5.3,10.19l-0.1-0.06l0.3,1.22l0.49,2c0.0829,0.2634-0.0634,0.5441-0.3267,0.6271C5.6105,13.9937,5.5553,14.0014,5.5,14h-4C1.2239,14,1,13.7761,1,13.5v-12C1,1.2239,1.2239,1,1.5,1h1.1c0.2346-0.0011,0.4384,0.1611,0.49,0.39L4,5.06V5.2c0.6569-0.314,1.4361-0.2205,2,0.24c0.16,0.13,0.31,0.28,0.47,0.41c0.2847,0.2546,0.7153,0.2546,1,0c0.16-0.13,0.31-0.28,0.47-0.41c0.7076-0.5968,1.7424-0.5968,2.45,0c0.15,0.13,0.29,0.27,0.44,0.39c0.2847,0.2546,0.7153,0.2546,1,0l0.47-0.41c0.3163-0.2672,0.7159-0.4157,1.13-0.42l0,0c0.2761,0,0.5,0.2239,0.5,0.5S13.7061,6,13.43,6l0,0c-0.259,0.0219-0.4994,0.1439-0.67,0.34c-0.2714,0.2887-0.6175,0.4964-1,0.6C11.1485,7.1216,10.4866,6.9824,10,6.57L9.67,6.23C9.3724,5.9262,8.8849,5.9213,8.5811,6.2189C8.5774,6.2226,8.5737,6.2263,8.57,6.23C8.43,6.35,8.3,6.48,8.15,6.6C7.4222,7.1784,6.3837,7.1489,5.69,6.53L5.3,6.19c-0.2847-0.2546-0.7153-0.2546-1,0L4.24,6.24L4.93,9C5.3226,9.029,5.6965,9.1793,6,9.43c0.16,0.13,0.31,0.28,0.47,0.41c0.2847,0.2546,0.7153,0.2546,1,0c0.16-0.13,0.31-0.28,0.47-0.41c0.7076-0.5968,1.7424-0.5968,2.45,0c0.15,0.13,0.29,0.27,0.44,0.39c0.2847,0.2546,0.7153,0.2546,1,0l0.47-0.41c0.3177-0.2636,0.7172-0.4085,1.13-0.41l0,0c0.2761-0.0055,0.5044,0.2138,0.5099,0.4899C13.94,9.4933,13.94,9.4966,13.94,9.5z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="nav-item-content">
+                        <div class="nav-item-title">GERD Staudamm</div>
+                        <div class="nav-item-description">Äthiopien</div>
+                    </div>
+                </div>
+
+                <div class="nav-item" data-location="aswan">
+                    <div class="nav-item-icon" style="background: var(--system-teal);">
+                        <svg viewBox="0 0 15 15" fill="currentColor">
+                            <path
+                                d="M13.94,9.5c0,0.2761-0.2239,0.5-0.5,0.5l0,0c-0.259,0.0219-0.4994,0.1439-0.67,0.34c-0.2714,0.2887-0.6175,0.4964-1,0.6c-0.6115,0.1816-1.2734,0.0424-1.76-0.37l-0.39-0.35c-0.2976-0.3038-0.7851-0.3087-1.0889-0.0111C8.5274,10.2126,8.5237,10.2163,8.52,10.22c-0.14,0.12-0.27,0.25-0.42,0.37c-0.7278,0.5784-1.7663,0.5489-2.46-0.07L5.3,10.19l-0.1-0.06l0.3,1.22l0.49,2c0.0829,0.2634-0.0634,0.5441-0.3267,0.6271C5.6105,13.9937,5.5553,14.0014,5.5,14h-4C1.2239,14,1,13.7761,1,13.5v-12C1,1.2239,1.2239,1,1.5,1h1.1c0.2346-0.0011,0.4384,0.1611,0.49,0.39L4,5.06V5.2c0.6569-0.314,1.4361-0.2205,2,0.24c0.16,0.13,0.31,0.28,0.47,0.41c0.2847,0.2546,0.7153,0.2546,1,0c0.16-0.13,0.31-0.28,0.47-0.41c0.7076-0.5968,1.7424-0.5968,2.45,0c0.15,0.13,0.29,0.27,0.44,0.39c0.2847,0.2546,0.7153,0.2546,1,0l0.47-0.41c0.3163-0.2672,0.7159-0.4157,1.13-0.42l0,0c0.2761,0,0.5,0.2239,0.5,0.5S13.7061,6,13.43,6l0,0c-0.259,0.0219-0.4994,0.1439-0.67,0.34c-0.2714,0.2887-0.6175,0.4964-1,0.6C11.1485,7.1216,10.4866,6.9824,10,6.57L9.67,6.23C9.3724,5.9262,8.8849,5.9213,8.5811,6.2189C8.5774,6.2226,8.5737,6.2263,8.57,6.23C8.43,6.35,8.3,6.48,8.15,6.6C7.4222,7.1784,6.3837,7.1489,5.69,6.53L5.3,6.19c-0.2847-0.2546-0.7153-0.2546-1,0L4.24,6.24L4.93,9C5.3226,9.029,5.6965,9.1793,6,9.43c0.16,0.13,0.31,0.28,0.47,0.41c0.2847,0.2546,0.7153,0.2546,1,0c0.16-0.13,0.31-0.28,0.47-0.41c0.7076-0.5968,1.7424-0.5968,2.45,0c0.15,0.13,0.29,0.27,0.44,0.39c0.2847,0.2546,0.7153,0.2546,1,0l0.47-0.41c0.3177-0.2636,0.7172-0.4085,1.13-0.41l0,0c0.2761-0.0055,0.5044,0.2138,0.5099,0.4899C13.94,9.4933,13.94,9.4966,13.94,9.5z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="nav-item-content">
+                        <div class="nav-item-title">Assuan-Staudamm</div>
+                        <div class="nav-item-description">Ägypten</div>
+                    </div>
+                </div>
+
+                <div class="nav-item" data-location="khartoum">
+                    <div class="nav-item-icon" style="background: var(--system-green);">
+                        <svg viewBox="0 0 15 15" fill="currentColor">
+                            <path
+                                d="M12.6368 3.9994H10.9981V2.3608C10.998 2.16148 10.8364 1.99994 10.6371 2H10.3591C10.1598 2 9.9982 2.16158 9.9982 2.3609V3.9994H8.36C8.16068 3.9994 7.9991 4.16098 7.9991 4.3603V9.9984H4.3621C4.16168 9.9984 3.9992 10.1609 3.9992 10.3613V12.6358C3.99975 12.8358 4.16207 12.9977 4.3621 12.9977H12.6368C12.8361 12.9977 12.9977 12.8361 12.9977 12.6368V4.36C12.9977 4.16068 12.8361 3.9994 12.6368 3.9994ZM5.9989 11.9981H4.9989V10.9981H5.9989V11.9981ZM7.9989 11.9981H6.9989V10.9981H7.9989V11.9981ZM9.9989 11.9981H8.9989V10.9981H9.9989V11.9981ZM9.9989 9.9981H8.9989V8.9981H9.9989V9.9981ZM9.9989 7.9981H8.9989V6.9981H9.9989V7.9981ZM9.9989 5.9981H8.9989V4.9981H9.9989V5.9981ZM11.9989 11.9971H10.9989V10.9971H11.9989V11.9971ZM11.9989 9.9971H10.9989V8.9971H11.9989V9.9971ZM11.9989 7.9971H10.9989V6.9971H11.9989V7.9971ZM11.9989 5.9971H10.9989V4.9971H11.9989V5.9971ZM6.9987 2.3608C6.99864 2.16152 6.83708 2 6.6378 2H4.36C4.16068 2 3.9991 2.16158 3.9991 2.3609V4H2.36C2.16138 4.00049 2.00049 4.16138 2 4.36V12.6474C2 12.8407 2.1567 12.9974 2.35 12.9974H2.9994V8.9986H6.9987V2.3608ZM4 7.9981H3V6.9981H4V7.9981ZM4 5.9981H3V4.9981H4V5.9981ZM6 7.9981H5V6.9981H6V7.9981ZM6 5.9981H5V4.9981H6V5.9981ZM6 3.9981H5V3H6V4V3.9981Z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="nav-item-content">
+                        <div class="nav-item-title">Khartum</div>
+                        <div class="nav-item-description">Sudan</div>
+                    </div>
+                </div>
+
+                <div class="nav-item" data-location="cairo">
+                    <div class="nav-item-icon" style="background: var(--system-purple);">
+                        <svg viewBox="0 0 15 15" fill="currentColor">
+                            <path
+                                d="M12.6368 3.9994H10.9981V2.3608C10.998 2.16148 10.8364 1.99994 10.6371 2H10.3591C10.1598 2 9.9982 2.16158 9.9982 2.3609V3.9994H8.36C8.16068 3.9994 7.9991 4.16098 7.9991 4.3603V9.9984H4.3621C4.16168 9.9984 3.9992 10.1609 3.9992 10.3613V12.6358C3.99975 12.8358 4.16207 12.9977 4.3621 12.9977H12.6368C12.8361 12.9977 12.9977 12.8361 12.9977 12.6368V4.36C12.9977 4.16068 12.8361 3.9994 12.6368 3.9994ZM5.9989 11.9981H4.9989V10.9981H5.9989V11.9981ZM7.9989 11.9981H6.9989V10.9981H7.9989V11.9981ZM9.9989 11.9981H8.9989V10.9981H9.9989V11.9981ZM9.9989 9.9981H8.9989V8.9981H9.9989V9.9981ZM9.9989 7.9981H8.9989V6.9981H9.9989V7.9981ZM9.9989 5.9981H8.9989V4.9981H9.9989V5.9981ZM11.9989 11.9971H10.9989V10.9971H11.9989V11.9971ZM11.9989 9.9971H10.9989V8.9971H11.9989V9.9971ZM11.9989 7.9971H10.9989V6.9971H11.9989V7.9971ZM11.9989 5.9971H10.9989V4.9971H11.9989V5.9971ZM6.9987 2.3608C6.99864 2.16152 6.83708 2 6.6378 2H4.36C4.16068 2 3.9991 2.16158 3.9991 2.3609V4H2.36C2.16138 4.00049 2.00049 4.16138 2 4.36V12.6474C2 12.8407 2.1567 12.9974 2.35 12.9974H2.9994V8.9986H6.9987V2.3608ZM4 7.9981H3V6.9981H4V7.9981ZM4 5.9981H3V4.9981H4V5.9981ZM6 7.9981H5V6.9981H6V7.9981ZM6 5.9981H5V4.9981H6V5.9981ZM6 3.9981H5V3H6V4V3.9981Z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="nav-item-content">
+                        <div class="nav-item-title">Kairo</div>
+                        <div class="nav-item-description">Ägypten</div>
+                    </div>
+                </div>
+
+                <div class="nav-item" data-location="tana">
+                    <div class="nav-item-icon" style="background: var(--system-cyan);">
+                        <svg viewBox="0 0 15 15" fill="currentColor">
+                            <path
+                                d="M7.5 14C9.57688 14 12 12.7117 12 9.43241C12 7.20724 8.53844 2.2883 7.5 1C6.57691 2.2883 3 7.09007 3 9.43241C3 12.7117 5.42312 14 7.5 14Z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="nav-item-content">
+                        <div class="nav-item-title">Tanasee</div>
+                        <div class="nav-item-description">Äthiopien</div>
+                    </div>
+                </div>
+
+                <div class="nav-item" data-location="addis">
+                    <div class="nav-item-icon" style="background: var(--system-indigo);">
+                        <svg viewBox="0 0 15 15" fill="currentColor">
+                            <path
+                                d="M12.6368 3.9994H10.9981V2.3608C10.998 2.16148 10.8364 1.99994 10.6371 2H10.3591C10.1598 2 9.9982 2.16158 9.9982 2.3609V3.9994H8.36C8.16068 3.9994 7.9991 4.16098 7.9991 4.3603V9.9984H4.3621C4.16168 9.9984 3.9992 10.1609 3.9992 10.3613V12.6358C3.99975 12.8358 4.16207 12.9977 4.3621 12.9977H12.6368C12.8361 12.9977 12.9977 12.8361 12.9977 12.6368V4.36C12.9977 4.16068 12.8361 3.9994 12.6368 3.9994ZM5.9989 11.9981H4.9989V10.9981H5.9989V11.9981ZM7.9989 11.9981H6.9989V10.9981H7.9989V11.9981ZM9.9989 11.9981H8.9989V10.9981H9.9989V11.9981ZM9.9989 9.9981H8.9989V8.9981H9.9989V9.9981ZM9.9989 7.9981H8.9989V6.9981H9.9989V7.9981ZM9.9989 5.9981H8.9989V4.9981H9.9989V5.9981ZM11.9989 11.9971H10.9989V10.9971H11.9989V11.9971ZM11.9989 9.9971H10.9989V8.9971H11.9989V9.9971ZM11.9989 7.9971H10.9989V6.9971H11.9989V7.9971ZM11.9989 5.9971H10.9989V4.9971H11.9989V5.9971ZM6.9987 2.3608C6.99864 2.16152 6.83708 2 6.6378 2H4.36C4.16068 2 3.9991 2.16158 3.9991 2.3609V4H2.36C2.16138 4.00049 2.00049 4.16138 2 4.36V12.6474C2 12.8407 2.1567 12.9974 2.35 12.9974H2.9994V8.9986H6.9987V2.3608ZM4 7.9981H3V6.9981H4V7.9981ZM4 5.9981H3V4.9981H4V5.9981ZM6 7.9981H5V6.9981H6V7.9981ZM6 5.9981H5V4.9981H6V5.9981ZM6 3.9981H5V3H6V4V3.9981Z">
+                            </path>
+                        </svg>
+                    </div>
+                    <div class="nav-item-content">
+                        <div class="nav-item-title">Addis Abeba</div>
+                        <div class="nav-item-description">Äthiopien</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Ansichten</div>
+
+                <div class="nav-item" data-action="overview">
+                    <div class="nav-item-icon" style="background: var(--system-blue);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                        </svg>
+                    </div>
+                    <div class="nav-item-content">
+                        <div class="nav-item-title">Gesamtübersicht</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="map-controls">
+        <div class="control-group glass">
+            <button class="control-button active" data-layer="standard" title="Karte">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+                    <line x1="8" y1="2" x2="8" y2="18"></line>
+                    <line x1="16" y1="6" x2="16" y2="22"></line>
+                </svg>
+            </button>
+            <div class="control-divider"></div>
+            <button class="control-button" data-layer="satellite" title="Satellit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path
+                        d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                    </path>
+                </svg>
+            </button>
+            <div class="control-divider"></div>
+            <button class="control-button" data-layer="terrain" title="Gelände">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M8 3l4 8 5-5 5 15H2L8 3z"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="zoom-controls glass control-group">
+        <button class="control-button" id="zoomIn" title="Vergrößern">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
+        <div class="control-divider"></div>
+        <button class="control-button" id="zoomOut" title="Verkleinern">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        </button>
+    </div>
+
+    <button class="tour-button glass" id="tourButton" aria-label="Tour starten">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="tourIcon">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+        </svg>
+        <span class="tour-button-text" id="tourText">Tour starten</span>
+    </button>
+    <div class="tour-progress" id="tourProgress"></div>
+
+    <div class="info-panel glass-chrome" id="infoPanel">
+        <div class="info-panel-header">
+            <div class="info-panel-icon" id="infoPanelIcon"></div>
+            <div class="info-panel-title-group">
+                <h2 class="info-panel-title" id="infoPanelTitle">Standort</h2>
+                <p class="info-panel-location" id="infoPanelLocation">Region</p>
+            </div>
+            <button class="info-panel-close" id="infoPanelClose" aria-label="Schließen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="info-panel-content">
+            <p class="info-description" id="infoPanelDescription"></p>
+
+            <button class="zoom-location-button" id="zoomLocationButton">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                </svg>
+                <span>Näher heranzoomen</span>
+            </button>
+
+            <div class="facts-card">
+                <div class="facts-card-title">Wichtige Fakten</div>
+                <ul class="facts-list" id="infoPanelFacts"></ul>
+            </div>
+
+            <button class="expand-button" id="expandButton">
+                <span>Mehr erfahren</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="detail-overlay" id="detailOverlay"></div>
+    <div class="detail-panel glass-chrome" id="detailPanel">
+        <div class="detail-header">
+            <div class="detail-header-bg" id="detailHeaderBg"></div>
+            <div class="detail-header-gradient"></div>
+            <div class="detail-header-content">
+                <div class="detail-icon" id="detailIcon"></div>
+                <div class="detail-title-group">
+                    <h2 class="detail-title" id="detailTitle">Standort</h2>
+                    <p class="detail-subtitle" id="detailSubtitle">Region</p>
+                </div>
+            </div>
+            <button class="detail-close" id="detailClose" aria-label="Schließen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="detail-content" id="detailContent"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // ========================================
+        // ICONS - Apple Style (kategorisiert)
+        // ========================================
+        const icons = {
+            // Staudamm-Icon (für GERD und Assuan)
+            dam: `<svg viewBox="0 0 15 15" fill="currentColor"><path d="M13.94,9.5c0,0.2761-0.2239,0.5-0.5,0.5l0,0c-0.259,0.0219-0.4994,0.1439-0.67,0.34c-0.2714,0.2887-0.6175,0.4964-1,0.6c-0.6115,0.1816-1.2734,0.0424-1.76-0.37l-0.39-0.35c-0.2976-0.3038-0.7851-0.3087-1.0889-0.0111C8.5274,10.2126,8.5237,10.2163,8.52,10.22c-0.14,0.12-0.27,0.25-0.42,0.37c-0.7278,0.5784-1.7663,0.5489-2.46-0.07L5.3,10.19l-0.1-0.06l0.3,1.22l0.49,2c0.0829,0.2634-0.0634,0.5441-0.3267,0.6271C5.6105,13.9937,5.5553,14.0014,5.5,14h-4C1.2239,14,1,13.7761,1,13.5v-12C1,1.2239,1.2239,1,1.5,1h1.1c0.2346-0.0011,0.4384,0.1611,0.49,0.39L4,5.06V5.2c0.6569-0.314,1.4361-0.2205,2,0.24c0.16,0.13,0.31,0.28,0.47,0.41c0.2847,0.2546,0.7153,0.2546,1,0c0.16-0.13,0.31-0.28,0.47-0.41c0.7076-0.5968,1.7424-0.5968,2.45,0c0.15,0.13,0.29,0.27,0.44,0.39c0.2847,0.2546,0.7153,0.2546,1,0l0.47-0.41c0.3163-0.2672,0.7159-0.4157,1.13-0.42l0,0c0.2761,0,0.5,0.2239,0.5,0.5S13.7061,6,13.43,6l0,0c-0.259,0.0219-0.4994,0.1439-0.67,0.34c-0.2714,0.2887-0.6175,0.4964-1,0.6C11.1485,7.1216,10.4866,6.9824,10,6.57L9.67,6.23C9.3724,5.9262,8.8849,5.9213,8.5811,6.2189C8.5774,6.2226,8.5737,6.2263,8.57,6.23C8.43,6.35,8.3,6.48,8.15,6.6C7.4222,7.1784,6.3837,7.1489,5.69,6.53L5.3,6.19c-0.2847-0.2546-0.7153-0.2546-1,0L4.24,6.24L4.93,9C5.3226,9.029,5.6965,9.1793,6,9.43c0.16,0.13,0.31,0.28,0.47,0.41c0.2847,0.2546,0.7153,0.2546,1,0c0.16-0.13,0.31-0.28,0.47-0.41c0.7076-0.5968,1.7424-0.5968,2.45,0c0.15,0.13,0.29,0.27,0.44,0.39c0.2847,0.2546,0.7153,0.2546,1,0l0.47-0.41c0.3177-0.2636,0.7172-0.4085,1.13-0.41l0,0c0.2761-0.0055,0.5044,0.2138,0.5099,0.4899C13.94,9.4933,13.94,9.4966,13.94,9.5z"/></svg>`,
+
+            // Stadt-Icon (für Khartum, Kairo, Addis Abeba)
+            city: `<svg viewBox="0 0 15 15" fill="currentColor"><path d="M12.6368 3.9994H10.9981V2.3608C10.998 2.16148 10.8364 1.99994 10.6371 2H10.3591C10.1598 2 9.9982 2.16158 9.9982 2.3609V3.9994H8.36C8.16068 3.9994 7.9991 4.16098 7.9991 4.3603V9.9984H4.3621C4.16168 9.9984 3.9992 10.1609 3.9992 10.3613V12.6358C3.99975 12.8358 4.16207 12.9977 4.3621 12.9977H12.6368C12.8361 12.9977 12.9977 12.8361 12.9977 12.6368V4.36C12.9977 4.16068 12.8361 3.9994 12.6368 3.9994ZM5.9989 11.9981H4.9989V10.9981H5.9989V11.9981ZM7.9989 11.9981H6.9989V10.9981H7.9989V11.9981ZM9.9989 11.9981H8.9989V10.9981H9.9989V11.9981ZM9.9989 9.9981H8.9989V8.9981H9.9989V9.9981ZM9.9989 7.9981H8.9989V6.9981H9.9989V7.9981ZM9.9989 5.9981H8.9989V4.9981H9.9989V5.9981ZM11.9989 11.9971H10.9989V10.9971H11.9989V11.9971ZM11.9989 9.9971H10.9989V8.9971H11.9989V9.9971ZM11.9989 7.9971H10.9989V6.9971H11.9989V7.9971ZM11.9989 5.9971H10.9989V4.9971H11.9989V5.9971ZM6.9987 2.3608C6.99864 2.16152 6.83708 2 6.6378 2H4.36C4.16068 2 3.9991 2.16158 3.9991 2.3609V4H2.36C2.16138 4.00049 2.00049 4.16138 2 4.36V12.6474C2 12.8407 2.1567 12.9974 2.35 12.9974H2.9994V8.9986H6.9987V2.3608ZM4 7.9981H3V6.9981H4V7.9981ZM4 5.9981H3V4.9981H4V5.9981ZM6 7.9981H5V6.9981H6V7.9981ZM6 5.9981H5V4.9981H6V5.9981ZM6 3.9981H5V3H6V4V3.9981Z"/></svg>`,
+
+            // See/Gewässer-Icon (für Tanasee)
+            lake: `<svg viewBox="0 0 15 15" fill="currentColor"><path d="M7.5 14C9.57688 14 12 12.7117 12 9.43241C12 7.20724 8.53844 2.2883 7.5 1C6.57691 2.2883 3 7.09007 3 9.43241C3 12.7117 5.42312 14 7.5 14Z"/></svg>`
+        };
+
+        // ========================================
+        // LOCATION DATA
+        // ========================================
+        const locations = {
+            gerd: {
+                coordinates: [11.215, 35.092],
+                zoom: 14,
+                detailZoom: 16,
+                color: 'var(--system-red)',
+                colorHex: '#FF3B30',
+                title: "GERD Staudamm",
+                subtitle: "Äthiopien • Blaue Nil-Region",
+                description: "Der Grand Ethiopian Renaissance Dam (GERD) ist Afrikas größtes Wasserkraftwerk und ein Symbol für Äthiopiens Entwicklungsbestrebungen. Am 9. September 2025 wurde das Projekt von Premierminister Abiy Ahmed offiziell eingeweiht.",
+                iconType: 'dam',
+                facts: [
+                    "Installierte Kapazität: 5.150 Megawatt",
+                    "Baukosten: ca. 5 Milliarden USD",
+                    "Reservoir-Kapazität: 74 Milliarden m³",
+                    "Dimensionen: 1,8 km Länge, 145 m Höhe",
+                    "100% durch Äthiopien finanziert"
+                ],
+                stats: [
+                    { value: '5.150', label: 'MW Kapazität' },
+                    { value: '74', label: 'Mrd. m³ Wasser' },
+                    { value: '2011', label: 'Baubeginn' }
+                ],
+                detailedContent: `
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Überblick</h3>
+                        <p class="detail-section-text">
+                            Der Grand Ethiopian Renaissance Dam (GERD) ist das größte Wasserkraftprojekt Afrikas und 
+                            repräsentiert Äthiopiens Streben nach Energieunabhängigkeit und wirtschaftlicher Entwicklung. 
+                            Das Megaprojekt am Blauen Nil hat weitreichende geopolitische Implikationen für die gesamte 
+                            Nil-Region und beeinflusst die Beziehungen zwischen Äthiopien, Sudan und Ägypten.
+                        </p>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Technische Daten</h3>
+                        <div class="detail-stats" id="detailStats"></div>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Zeitstrahl</h3>
+                        <div class="detail-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2011</div>
+                                <div class="timeline-text">Grundsteinlegung durch Premierminister Meles Zenawi</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2020</div>
+                                <div class="timeline-text">Beginn der ersten Füllphase des Reservoirs</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2022</div>
+                                <div class="timeline-text">Erste Turbinen nehmen den Betrieb auf</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-year">2025</div>
+                                <div class="timeline-text">Offizielle Einweihung des fertiggestellten Projekts</div>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                headerImage: 'https://i.redd.it/l5pcdvkynrnf1.jpeg'
+            },
+            aswan: {
+                coordinates: [23.970, 32.878],
+                zoom: 13,
+                detailZoom: 15,
+                color: 'var(--system-teal)',
+                colorHex: '#32ADE6',
+                title: "Assuan-Hochdamm",
+                subtitle: "Ägypten • Oberägypten",
+                description: "Der Assuan-Hochdamm ist Ägyptens wichtigstes Wasserbauwerk und wurde in den 1960er Jahren mit sowjetischer Unterstützung erbaut. Er ist zentral für die Wasserversorgung und Landwirtschaft des Landes.",
+                iconType: 'dam',
+                facts: [
+                    "97% von Ägyptens Wasser stammt vom Nil",
+                    "Über 100 Millionen Menschen sind abhängig",
+                    "Nassersee: 500 km Länge",
+                    "Stromproduktion: 2.100 MW",
+                    "Fertigstellung: 1970"
+                ],
+                stats: [
+                    { value: '97%', label: 'Nilwasser-Anteil' },
+                    { value: '2.100', label: 'MW Kapazität' },
+                    { value: '1970', label: 'Fertigstellung' }
+                ],
+                detailedContent: `
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Strategische Bedeutung</h3>
+                        <p class="detail-section-text">
+                            Der Assuan-Hochdamm ist das Rückgrat der ägyptischen Wasserversorgung. Nahezu das gesamte 
+                            Süßwasser des Landes stammt aus dem Nil, was die existenzielle Bedeutung des Flusses für 
+                            über 100 Millionen Menschen unterstreicht.
+                        </p>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Technische Kennzahlen</h3>
+                        <div class="detail-stats" id="detailStats"></div>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Historischer Kontext</h3>
+                        <p class="detail-section-text">
+                            Der Bau des Hochdamms war ein Prestigeprojekt der Nasser-Ära und wurde maßgeblich durch 
+                            sowjetische Unterstützung ermöglicht. Die Stauung des Nils führte zur Entstehung des 
+                            Nassersees, eines der größten künstlichen Seen der Welt.
+                        </p>
+                    </div>
+                `,
+                headerImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Assuan-Hochdamm_15.JPG/2560px-Assuan-Hochdamm_15.JPG'
+            },
+            khartoum: {
+                coordinates: [15.588, 32.534],
+                zoom: 12,
+                detailZoom: 14,
+                color: 'var(--system-green)',
+                colorHex: '#34C759',
+                title: "Khartum",
+                subtitle: "Sudan • Hauptstadtregion",
+                description: "Die Hauptstadt des Sudan liegt strategisch am Zusammenfluss von Blauem und Weißem Nil. Die Stadt spielt eine zentrale Vermittlerrolle im Nil-Wasserkonflikt.",
+                iconType: 'city',
+                facts: [
+                    "Zusammenfluss von Blauem und Weißem Nil",
+                    "Bürgerkrieg seit April 2023",
+                    "Potenzial für GERD-Stromimporte",
+                    "Sorge um Staudamm-Sicherheit",
+                    "Vermittlerrolle im Wasserkonflikt"
+                ],
+                stats: [
+                    { value: '8+', label: 'Mio. Einwohner' },
+                    { value: '2', label: 'Nil-Flüsse' },
+                    { value: '2023', label: 'Konfliktbeginn' }
+                ],
+                detailedContent: `
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Geographische Besonderheit</h3>
+                        <p class="detail-section-text">
+                            Khartum ist einzigartig positioniert am Zusammenfluss der beiden großen Nil-Zuflüsse. 
+                            Der Blaue Nil aus Äthiopien und der Weiße Nil aus Uganda vereinigen sich hier zum 
+                            eigentlichen Nil.
+                        </p>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Aktuelle Situation</h3>
+                        <p class="detail-section-text">
+                            Der Sudan befindet sich seit April 2023 in einem verheerenden Bürgerkrieg. Die 
+                            humanitäre Krise hat die Aufmerksamkeit von den Wasserverhandlungen abgelenkt.
+                        </p>
+                    </div>
+                `,
+                headerImage: 'https://img.zeit.de/politik/ausland/2023-07/sudan-konflikt-khartum-5vor8-bild/wide__1000x562__desktop__scale_2'
+            },
+            cairo: {
+                coordinates: [30.044, 31.236],
+                zoom: 12,
+                detailZoom: 14,
+                color: 'var(--system-purple)',
+                colorHex: '#AF52DE',
+                title: "Kairo",
+                subtitle: "Ägypten • Hauptstadt",
+                description: "Ägyptens Hauptstadt und das diplomatische Zentrum der Nil-Verhandlungen. Von hier aus koordiniert Ägypten seine Bemühungen um den Schutz historischer Wasserrechte.",
+                iconType: 'city',
+                facts: [
+                    "Über 20 Millionen Einwohner",
+                    "Arabische Liga-Unterstützung",
+                    "Forderung: bindendes Wasserabkommen",
+                    "Treffen mit Sudan Oktober 2025",
+                    "Beruft sich auf historische Verträge"
+                ],
+                stats: [
+                    { value: '20+', label: 'Mio. Einwohner' },
+                    { value: '1929', label: 'Nilvertrag' },
+                    { value: '55.5', label: 'Mrd. m³/Jahr' }
+                ],
+                detailedContent: `
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Diplomatische Position</h3>
+                        <p class="detail-section-text">
+                            Ägypten beruft sich auf kolonialzeitliche Verträge von 1929 und 1959, die dem Land 
+                            den Großteil des Nilwassers zusprechen. Die ägyptische Regierung fordert ein 
+                            rechtlich bindendes Abkommen mit Äthiopien.
+                        </p>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Existenzielle Bedenken</h3>
+                        <p class="detail-section-text">
+                            Mit einer fast vollständigen Abhängigkeit vom Nilwasser für Landwirtschaft und 
+                            Trinkwasser betrachtet Ägypten jede unkontrollierte Wasserreduktion als 
+                            existenzielle Bedrohung.
+                        </p>
+                    </div>
+                `,
+                headerImage: 'https://cdnsio.nicko-cruises.de/image/resize/1024x683/af08d82d-f27b-4532-989a-f70c1d747e70/gypten-blick-auf-kairo-istock-1148380677.jpeg'
+            },
+            tana: {
+                coordinates: [12.0, 37.25],
+                zoom: 11,
+                detailZoom: 13,
+                color: 'var(--system-cyan)',
+                colorHex: '#00C7BE',
+                title: "Tanasee",
+                subtitle: "Äthiopien • Amhara-Region",
+                description: "Der größte See Äthiopiens und Ursprung des Blauen Nils. Von hier fließt der Großteil des Wassers, das letztlich Ägypten erreicht.",
+                iconType: 'lake',
+                facts: [
+                    "Fläche: ca. 3.000 km²",
+                    "Höhenlage: 1.800 Meter",
+                    "85% des Nilwassers für Ägypten",
+                    "UNESCO-Biosphärenreservat",
+                    "Tis Issat Wasserfälle"
+                ],
+                stats: [
+                    { value: '3.000', label: 'km² Fläche' },
+                    { value: '85%', label: 'Nilwasser-Anteil' },
+                    { value: '1.800', label: 'm Höhe' }
+                ],
+                detailedContent: `
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Ökologische Bedeutung</h3>
+                        <p class="detail-section-text">
+                            Der Tanasee ist nicht nur die Quelle des Blauen Nils, sondern auch ein 
+                            UNESCO-Biosphärenreservat mit einzigartiger Biodiversität. Die berühmten 
+                            Tis Issat Wasserfälle sind eine der spektakulärsten Natursehenswürdigkeiten Afrikas.
+                        </p>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Hydrologische Rolle</h3>
+                        <p class="detail-section-text">
+                            Der Blaue Nil, der dem Tanasee entspringt, liefert etwa 85% des Wassers, 
+                            das letztlich Ägypten erreicht.
+                        </p>
+                    </div>
+                `,
+                headerImage: 'https://dansunshinetours.com/images/bg-tana250.jpg'
+            },
+            addis: {
+                coordinates: [9.005, 38.763],
+                zoom: 13,
+                detailZoom: 15,
+                color: 'var(--system-indigo)',
+                colorHex: '#5856D6',
+                title: "Addis Abeba",
+                subtitle: "Äthiopien • Hauptstadt",
+                description: "Äthiopiens Hauptstadt und Sitz der Afrikanischen Union. Von hier aus werden die GERD-Verhandlungen geführt und die nationale Entwicklungsstrategie koordiniert.",
+                iconType: 'city',
+                facts: [
+                    "60% der Bevölkerung ohne Stromzugang",
+                    "120 Millionen Einwohner in Äthiopien",
+                    "Sitz der Afrikanischen Union",
+                    "Lehnt koloniale Wasserverträge ab",
+                    "GERD als nationales Entwicklungssymbol"
+                ],
+                stats: [
+                    { value: '120', label: 'Mio. Einwohner' },
+                    { value: '60%', label: 'ohne Strom' },
+                    { value: 'AU', label: 'Hauptsitz' }
+                ],
+                detailedContent: `
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Entwicklungsargumentation</h3>
+                        <p class="detail-section-text">
+                            Äthiopien argumentiert, dass das Land sein Recht auf Entwicklung und 
+                            Nutzung eigener natürlicher Ressourcen hat. Mit über 60% der Bevölkerung 
+                            ohne Zugang zu Elektrizität sieht die Regierung den GERD als unverzichtbar.
+                        </p>
+                    </div>
+                    <div class="detail-section">
+                        <h3 class="detail-section-title">Afrikanische Perspektive</h3>
+                        <p class="detail-section-text">
+                            Als Sitz der Afrikanischen Union spielt Addis Abeba eine besondere 
+                            Rolle in den Bemühungen um eine afrikanische Lösung des Wasserkonflikts.
+                        </p>
+                    </div>
+                `,
+                headerImage: 'https://i.redd.it/vfj1atjp4uwc1.jpeg'
+            }
+        };
+
+        // Tour-Reihenfolge = Menü-Reihenfolge (1:1)
+        const tourOrder = ['gerd', 'aswan', 'khartoum', 'cairo', 'tana', 'addis'];
+
+        // ========================================
+        // MAP INITIALIZATION
+        // ========================================
+        const map = L.map('map', {
+            zoomControl: false,
+            attributionControl: false,
+            zoomSnap: 0.5,
+            zoomDelta: 0.5,
+            wheelPxPerZoomLevel: 100
+        }).setView([17, 33], 5);
+
+        const mapLayers = {
+            standard: L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 19
+            }),
+            satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                maxZoom: 19
+            }),
+            terrain: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                maxZoom: 17
+            })
+        };
+
+        let activeLayer = 'standard';
+        mapLayers.standard.addTo(map);
+
+        // Nil-Fluss
+        const nileCoordinates = [
+            [31.5, 31.8], [30.0, 31.2], [27.0, 31.0], [24.0, 32.9],
+            [19.0, 32.5], [15.6, 32.5], [13.5, 33.5], [11.2, 35.1], [12.0, 37.2]
+        ];
+
+        L.polyline(nileCoordinates, {
+            color: 'rgba(50, 173, 230, 0.2)',
+            weight: 12,
+            lineCap: 'round',
+            lineJoin: 'round'
+        }).addTo(map);
+
+        L.polyline(nileCoordinates, {
+            color: '#32ADE6',
+            weight: 3,
+            opacity: 0.7,
+            lineCap: 'round',
+            lineJoin: 'round',
+            dashArray: '8, 6'
+        }).addTo(map);
+
+        // ========================================
+        // RUNDE MARKER MIT ICONS
+        // ========================================
+        const markers = {};
+
+        Object.entries(locations).forEach(([key, location]) => {
+            const iconSvg = icons[location.iconType];
+
+            const markerHtml = `
+                <div class="map-marker">
+                    <div class="marker-container">
+                        <div class="marker-bg" style="background: ${location.colorHex};">
+                            ${iconSvg}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const icon = L.divIcon({
+                className: 'custom-marker-wrapper',
+                html: markerHtml,
+                iconSize: [40, 40],
+                iconAnchor: [20, 20]
+            });
+
+            const marker = L.marker(location.coordinates, { icon }).addTo(map);
+
+            marker.on('click', () => {
+                showInfoPanel(key);
+                // Direktes, deutliches Heranzoomen bei Klick
+                map.flyTo(location.coordinates, location.zoom, {
+                    duration: 1,
+                    easeLinearity: 0.4
+                });
+            });
+
+            markers[key] = marker;
+        });
+
+        // ========================================
+        // UI ELEMENTS
+        // ========================================
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const infoPanel = document.getElementById('infoPanel');
+        const infoPanelClose = document.getElementById('infoPanelClose');
+        const expandButton = document.getElementById('expandButton');
+        const zoomLocationButton = document.getElementById('zoomLocationButton');
+        const detailOverlay = document.getElementById('detailOverlay');
+        const detailPanel = document.getElementById('detailPanel');
+        const detailClose = document.getElementById('detailClose');
+        const tourButton = document.getElementById('tourButton');
+        const tourText = document.getElementById('tourText');
+        const tourIcon = document.getElementById('tourIcon');
+        const tourProgress = document.getElementById('tourProgress');
+
+        let currentLocation = null;
+        let tourActive = false;
+        let tourIndex = 0;
+        let tourTimeout = null;
+
+        // Sidebar Toggle
+        function toggleSidebar() {
+            sidebar.classList.toggle('visible');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        sidebarToggle?.addEventListener('click', toggleSidebar);
+
+        // Nav Items
+        document.querySelectorAll('.nav-item[data-location]').forEach(item => {
+            item.addEventListener('click', () => {
+                const locationKey = item.dataset.location;
+                navigateToLocation(locationKey);
+
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('visible');
+                    sidebar.classList.add('collapsed');
+                }
+            });
+        });
+
+        document.querySelectorAll('.nav-item[data-action]').forEach(item => {
+            item.addEventListener('click', () => {
+                if (item.dataset.action === 'overview') {
+                    showOverview();
+                }
+            });
+        });
+
+        // ========================================
+        // NAVIGATION
+        // ========================================
+        function navigateToLocation(key) {
+            const location = locations[key];
+
+            // Sofortiges, deutliches Heranzoomen
+            map.flyTo(location.coordinates, location.zoom, {
+                duration: 1,
+                easeLinearity: 0.4
+            });
+
+            setTimeout(() => {
+                showInfoPanel(key);
+            }, 400);
+        }
+
+        function showOverview() {
+            hideInfoPanel();
+            stopTour();
+            map.flyTo([17, 33], 5, {
+                duration: 1
+            });
+        }
+
+        // ========================================
+        // INFO PANEL
+        // ========================================
+        function showInfoPanel(key) {
+            currentLocation = key;
+            const location = locations[key];
+
+            document.getElementById('infoPanelIcon').innerHTML = icons[location.iconType];
+            document.getElementById('infoPanelIcon').style.background = location.color;
+            document.getElementById('infoPanelTitle').textContent = location.title;
+            document.getElementById('infoPanelLocation').textContent = location.subtitle;
+            document.getElementById('infoPanelDescription').textContent = location.description;
+
+            const factsList = document.getElementById('infoPanelFacts');
+            factsList.innerHTML = location.facts.map(fact =>
+                `<li class="facts-item">${fact}</li>`
+            ).join('');
+
+            infoPanel.classList.add('visible');
+        }
+
+        function hideInfoPanel() {
+            infoPanel.classList.remove('visible');
+            currentLocation = null;
+        }
+
+        infoPanelClose.addEventListener('click', hideInfoPanel);
+
+        // Näher heranzoomen Button
+        zoomLocationButton.addEventListener('click', () => {
+            if (currentLocation) {
+                const location = locations[currentLocation];
+                map.flyTo(location.coordinates, location.detailZoom, {
+                    duration: 0.8,
+                    easeLinearity: 0.4
+                });
+            }
+        });
+
+        // ========================================
+        // DETAIL PANEL
+        // ========================================
+        expandButton.addEventListener('click', () => {
+            if (currentLocation) {
+                showDetailPanel(currentLocation);
+            }
+        });
+
+        function showDetailPanel(key) {
+            const location = locations[key];
+
+            document.getElementById('detailHeaderBg').style.backgroundImage = `url(${location.headerImage})`;
+            document.getElementById('detailIcon').innerHTML = icons[location.iconType];
+            document.getElementById('detailIcon').style.background = location.color;
+            document.getElementById('detailTitle').textContent = location.title;
+            document.getElementById('detailSubtitle').textContent = location.subtitle;
+
+            document.getElementById('detailContent').innerHTML = location.detailedContent;
+
+            const statsContainer = document.getElementById('detailStats');
+            if (statsContainer && location.stats) {
+                statsContainer.innerHTML = location.stats.map(stat => `
+                    <div class="stat-card">
+                        <div class="stat-value">${stat.value}</div>
+                        <div class="stat-label">${stat.label}</div>
+                    </div>
+                `).join('');
+            }
+
+            detailOverlay.classList.add('visible');
+            detailPanel.classList.add('visible');
+        }
+
+        function hideDetailPanel() {
+            detailOverlay.classList.remove('visible');
+            detailPanel.classList.remove('visible');
+        }
+
+        detailClose.addEventListener('click', hideDetailPanel);
+        detailOverlay.addEventListener('click', hideDetailPanel);
+
+        // ========================================
+        // TOUR
+        // ========================================
+        function initTourProgress() {
+            tourProgress.innerHTML = tourOrder.map((_, i) =>
+                `<div class="tour-dot" data-index="${i}"></div>`
+            ).join('');
+        }
+
+        function updateTourProgress() {
+            const dots = tourProgress.querySelectorAll('.tour-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.remove('active', 'visited');
+                if (i === tourIndex) {
+                    dot.classList.add('active');
+                } else if (i < tourIndex) {
+                    dot.classList.add('visited');
+                }
+            });
+        }
+
+        function startTour() {
+            tourActive = true;
+            tourIndex = 0;
+            tourButton.classList.add('playing');
+            tourText.textContent = 'Tour stoppen';
+            tourIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+
+            initTourProgress();
+            tourProgress.style.display = 'flex';
+
+            playTourStep();
+        }
+
+        function stopTour() {
+            tourActive = false;
+            tourButton.classList.remove('playing');
+            tourText.textContent = 'Tour starten';
+            tourIcon.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+            tourProgress.style.display = 'none';
+
+            if (tourTimeout) {
+                clearTimeout(tourTimeout);
+                tourTimeout = null;
+            }
+        }
+
+        function playTourStep() {
+            if (!tourActive || tourIndex >= tourOrder.length) {
+                stopTour();
+                return;
+            }
+
+            const key = tourOrder[tourIndex];
+            const location = locations[key];
+
+            updateTourProgress();
+
+            map.flyTo(location.coordinates, location.zoom, {
+                duration: 1.2,
+                easeLinearity: 0.35
+            });
+
+            setTimeout(() => {
+                showInfoPanel(key);
+            }, 600);
+
+            tourTimeout = setTimeout(() => {
+                tourIndex++;
+                playTourStep();
+            }, 5500);
+        }
+
+        tourButton.addEventListener('click', () => {
+            if (tourActive) {
+                stopTour();
+            } else {
+                startTour();
+            }
+        });
+
+        // ========================================
+        // MAP LAYER CONTROLS
+        // ========================================
+        document.querySelectorAll('.control-button[data-layer]').forEach(button => {
+            button.addEventListener('click', () => {
+                const layer = button.dataset.layer;
+
+                map.removeLayer(mapLayers[activeLayer]);
+                mapLayers[layer].addTo(map);
+                activeLayer = layer;
+
+                document.querySelectorAll('.control-button[data-layer]').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.layer === layer);
+                });
+            });
+        });
+
+        // ========================================
+        // ZOOM CONTROLS
+        // ========================================
+        document.getElementById('zoomIn').addEventListener('click', () => {
+            map.zoomIn(1);
+        });
+
+        document.getElementById('zoomOut').addEventListener('click', () => {
+            map.zoomOut(1);
+        });
+
+        // ========================================
+        // RESPONSIVE
+        // ========================================
+        function initResponsive() {
+            if (window.innerWidth > 768) {
+                sidebar.classList.add('visible');
+                sidebar.classList.remove('collapsed');
+            } else {
+                sidebar.classList.remove('visible');
+                sidebar.classList.add('collapsed');
+            }
+        }
+
+        initResponsive();
+        window.addEventListener('resize', initResponsive);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideDetailPanel();
+                hideInfoPanel();
+                stopTour();
+            }
+        });
+
+        initTourProgress();
+    </script>
+
+
+</body>
+
+</html>
