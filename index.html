@@ -354,6 +354,46 @@
             background-color: #F5F5F7;
         }
 
+        /* ===== iOS / iPad / Mobile Touch-Device Fixes ===== */
+        /* Fix 1: Video player icons clipped by border-radius on touch devices */
+        @supports (-webkit-touch-callout: none) {
+
+            /* On iOS, remove border-radius from the video itself.
+               The container .media-item-large still clips with its own radius. */
+            .media-item-large video {
+                border-radius: 0;
+            }
+
+            /* Add slight inset so native controls (PiP, volume, fullscreen)
+               don't get hidden behind the rounded corners of the container */
+            .media-item-large {
+                border-radius: 20px;
+                /* Slightly tighter radius so controls clear the curve */
+            }
+
+            video::-webkit-media-controls-enclosure {
+                border-radius: 0 0 20px 20px;
+            }
+
+            /* Fix 2: Audio player bottom corners on iOS */
+            .audio-player-simple {
+                background: #F5F5F7;
+                border-radius: 27px;
+                overflow: hidden;
+            }
+
+            .audio-player-simple audio {
+                border-radius: 27px;
+                -webkit-appearance: none;
+                appearance: none;
+            }
+
+            audio::-webkit-media-controls-panel {
+                background-color: #F5F5F7;
+                border-radius: 27px;
+            }
+        }
+
         /* MAP SECTION - Restored "Gray Bar" look */
         .map-section {
             background: #000;
