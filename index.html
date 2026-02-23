@@ -328,13 +328,12 @@
         @supports (-webkit-touch-callout: none) {
 
             /* FIX 1: Video — the native iOS controls sit right at the video edges.
-               Container padding in the page background color (#F5F5F7) pushes 
-               the video inward so controls clear the rounded corners.
-               The padding is invisible because it matches the page background. */
+               Container padding in black pushes the video inward so controls 
+               clear the rounded corners. Black blends with video content. */
             .media-item-large {
                 border-radius: 20px;
                 overflow: hidden;
-                background: #F5F5F7;
+                background: #000;
                 padding: 3px;
             }
 
