@@ -158,7 +158,6 @@
 
         .container {
             max-width: 1200px;
-            /* Increased from 980px to fit 3 cards comfortably */
             margin: 0 auto;
             padding: 120px 40px;
         }
@@ -184,13 +183,10 @@
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            /* Force 3 columns */
             gap: 24px;
-            /* Slightly reduced gap to make them fit nicely */
             margin-top: 60px;
         }
 
-        /* Responsive: Stack on smaller screens */
         @media(max-width: 900px) {
             .cards-grid {
                 grid-template-columns: 1fr;
@@ -201,7 +197,6 @@
             background: #FFFFFF;
             border-radius: 30px;
             padding: 32px;
-            /* Reduced from 48px to save space for 3-col layout */
             box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.06);
             transition: 0.3s;
         }
@@ -232,35 +227,27 @@
             display: flex;
             flex-direction: column;
             gap: 80px;
-            /* Space between Video and Podcast */
             max-width: 800px;
             margin: 0 auto;
         }
 
         .video-group {
             width: 100%;
-            /* Just a structural wrapper */
         }
 
         .media-item-large {
             width: 100%;
             border-radius: 24px;
-            /* Ensure container has radius */
             overflow: hidden;
-            /* Crop any square children (video) */
             background: transparent;
-            /* No background color */
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            /* Shadow on the clipped container */
         }
 
         .media-item-large video {
             width: 100%;
             height: auto;
             border-radius: 24px;
-            /* Match container */
             display: block;
-            /* Remove inline gap */
             background: #000;
             box-shadow: none;
         }
@@ -281,7 +268,6 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             max-width: 600px;
             margin: 0 auto;
-            /* Center the podcast card */
         }
 
         .podcast-header-vertical {
@@ -301,41 +287,32 @@
         /* PODCAST - Minimalist Stack */
         .podcast-minimalist-wrapper {
             max-width: 700px;
-            /* Widened to 700px */
             margin: 0 auto;
             text-align: left;
             width: 100%;
             background: transparent !important;
-            /* Force transparency */
             box-shadow: none !important;
         }
 
         .podcast-title-simple {
             font-size: 32px;
-            /* Increased from 28px */
             font-weight: 600;
-            /* Apple often uses 600 for headers */
             letter-spacing: -0.01em;
-            /* Tighter tracking */
             color: #1d1d1f;
             margin-bottom: 16px;
             margin-left: 16px;
-            /* Align with rounded corner start */
         }
 
         /* Audio Player - Ultra Minimalist */
         .audio-player-simple audio {
             width: 100%;
             height: 54px;
-            /* Integrated feedback: User wants it just "a bit wider", 80px might be too much, 54px is standard Apple pill size */
             border-radius: 27px;
             background: #F5F5F7;
-            /* Matching standard grey */
             outline: none;
         }
 
         /* Hiding specific controls to keep ONLY Play + Timeline + Time */
-        /* Note: Webkit pseudo-elements are tricky. We try best effort. */
         audio::-webkit-media-controls-volume-control-container,
         audio::-webkit-media-controls-mute-button,
         audio::-webkit-media-controls-airplay-button,
@@ -357,36 +334,44 @@
         /* ===== iOS / iPad / Mobile Touch-Device Fixes ===== */
         @supports (-webkit-touch-callout: none) {
 
-            /* FIX 1: Video player — iOS positions native controls (PiP, volume)
-               right at the video edge, unlike Mac which adds internal padding.
-               With rounded corners + overflow:hidden, those edge icons get clipped.
-               
-               Solution: Keep the rounded container, but add a small dark frame
-               (margin on the video) that pushes the video + all its controls 
-               INWARD, away from the clipped corners. The icons at ~12px from 
-               video edge end up ~18px from container edge, safely past the 
-               16px border-radius curve. */
+            /* FIX 1: Video — keep full-size with rounded corners like Mac.
+               Use webkit pseudo-elements to nudge the native controls inward
+               so they don't sit right at the clipped edges. */
             .media-item-large {
-                border-radius: 16px;
+                border-radius: 24px;
                 overflow: hidden;
-                background: #000;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             }
 
             .media-item-large video {
                 border-radius: 0;
-                margin: 6px;
-                width: calc(100% - 12px);
                 display: block;
             }
 
-            /* FIX 2: Audio player — iOS native controls panel ignores CSS 
-               border-radius, showing ugly square corners at the bottom.
-               
-               Solution: The wrapper container does all the clipping with
-               overflow:hidden + border-radius. The audio element itself has
-               NO border-radius, so its native controls panel fills edge-to-edge
-               and gets cleanly cropped by the container's rounded shape. */
+            /* Push all controls inward with padding on the enclosure */
+            video::-webkit-media-controls-enclosure {
+                padding: 8px;
+            }
+
+            /* Ensure the scrubber dot/thumb is visible on the timeline */
+            video::-webkit-media-controls-timeline {
+                -webkit-appearance: none;
+                height: 6px;
+                border-radius: 3px;
+            }
+
+            video::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: #ffffff;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+                cursor: pointer;
+            }
+
+            /* FIX 2: Audio player — container clips with overflow:hidden 
+               so native controls panel gets cleanly cropped to rounded shape. */
             .audio-player-simple {
                 background: #F5F5F7;
                 border-radius: 27px;
@@ -421,7 +406,6 @@
             color: #fff;
             padding-top: 100px;
             padding-bottom: 0;
-            /* Removing bottom padding so it hits edge */
         }
 
         .map-preview-container {
@@ -486,7 +470,6 @@
         .reveal {
             opacity: 0;
             transform: scale(0.95) translateY(40px);
-            /* Slightly smaller start for "blopping" out effect */
             transition: opacity 0.8s var(--ease-out-cubic), transform 0.8s var(--ease-out-cubic);
         }
 
@@ -525,7 +508,6 @@
 
     <main>
 
-        <!-- TEXTS RESTORED TO ORIGINAL LENGTH -->
         <section class="container reveal">
             <h2 class="section-title">Worum geht es?</h2>
             <p class="body-text" style="text-align: center; max-width: 700px; margin: 0 auto 60px auto;">
@@ -566,16 +548,14 @@
         <!-- MEDIATHEK - MINIMALIST LAYOUT -->
         <section class="container reveal" style="padding-top: 0;">
             <h2 class="section-title" style="margin-bottom: 20px; margin-top: -80px;">Mediathek</h2>
-            <!-- Pulled up MAX amount (-80px) -->
             <p class="body-text"
                 style="text-align: center; margin-bottom: 60px; color: #86868b; font-size:28px; font-weight:500;">
                 Tiefere Einblicke in den Konflikt.
             </p>
 
             <div class="media-column">
-                <!-- 1. VIDEO (Größer/Breiter ziehen) -->
-                <div class="video-group"> <!-- Wrapper for spacing only -->
-                    <div class="media-item-large"> <!-- This one clips the video -->
+                <div class="video-group">
+                    <div class="media-item-large">
                         <video controls
                             poster="https://images.tagesschau.de/image/d4ac8485-18bf-4c87-b4b7-68568036b949/AAABmSmxypc/AAABmyZEoeA/16x9-1920/grand-ethiopian-renaissance-dam-102.jpg">
                             <source
@@ -587,12 +567,8 @@
                     <p class="caption">Tagesschau: Neuer Mega-Staudamm entzweit Nil-Anrainer</p>
                 </div>
 
-                <!-- 2. PODCAST (Minimalist: Title + Bar only) -->
                 <div class="podcast-minimalist-wrapper">
-                    <!-- Left aligned title -->
                     <h4 class="podcast-title-simple">Tagesschau Podcast</h4>
-
-                    <!-- Simpler Player Bar -->
                     <div class="audio-player-simple">
                         <audio controls>
                             <source
@@ -622,26 +598,21 @@
             </div>
         </section>
 
-
-
     </main>
 
     <script>
         // --- MAP LOGIC ---
         function openMap() {
-            // Native Navigation: Navigate to the map page
             window.location.href = "1.html";
         }
 
         // --- ANIMATION LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Animation Observer (Re-Triggerable)
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
                     } else {
-                        // Remove class to allow re-triggering animation on next scroll
                         entry.target.classList.remove('active');
                     }
                 });
@@ -650,7 +621,6 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
             const onScroll = () => {
-                // Hero Parallax Logic
                 const scroll = window.scrollY;
                 const heroH = document.querySelector('.hero-scroll-container').offsetHeight;
                 const winH = window.innerHeight;
@@ -670,7 +640,6 @@
                 }
             };
 
-            // Canvas Init
             const canvas = document.getElementById('hero-canvas');
             const ctx = canvas ? canvas.getContext('2d') : null;
             const images = [];
@@ -687,7 +656,7 @@
                         images.push(img);
                     }
                 };
-                loadImages(); // Start loading
+                loadImages();
             }
 
             const render = (idx) => {
@@ -696,7 +665,6 @@
                 const cW = canvas.width; const cH = canvas.height;
                 const iW = img.width; const iH = img.height;
 
-                // Cover Logic
                 let dW, dH, oX, oY;
                 if (cW / cH > iW / iH) {
                     dW = cW; dH = cW * (iH / iW);
