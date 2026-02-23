@@ -351,69 +351,6 @@
             background-color: #F5F5F7;
         }
 
-        /* ===== iOS / iPad / Mobile Touch-Device Fixes ===== */
-        @supports (-webkit-touch-callout: none) {
-
-            /* FIX 1: Video — smaller border-radius so native iOS controls
-               in the corners don't get clipped. */
-            .media-item-large {
-                border-radius: 12px;
-                overflow: hidden;
-            }
-
-            .media-item-large video {
-                border-radius: 0;
-                display: block;
-                width: 100%;
-            }
-
-            /* Scrubber dot/thumb on video timeline */
-            video::-webkit-media-controls-timeline {
-                -webkit-appearance: none;
-                padding: 4px 0;
-            }
-
-            video::-webkit-slider-thumb,
-            video::-webkit-media-slider-container thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 14px;
-                height: 14px;
-                border-radius: 50%;
-                background: #ffffff;
-                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-            }
-
-            /* FIX 2: Audio player — container clips the native controls panel
-               to a rounded shape via overflow:hidden. */
-            .audio-player-simple {
-                background: #F5F5F7;
-                border-radius: 27px;
-                overflow: hidden;
-                height: 54px;
-                position: relative;
-            }
-
-            .audio-player-simple audio {
-                width: 100%;
-                height: 54px;
-                border-radius: 0 !important;
-                -webkit-appearance: none;
-                appearance: none;
-                display: block;
-                background: #F5F5F7;
-            }
-
-            .audio-player-simple audio::-webkit-media-controls-panel {
-                background-color: #F5F5F7;
-                border-radius: 0 !important;
-            }
-
-            .audio-player-simple audio::-webkit-media-controls-enclosure {
-                border-radius: 0 !important;
-            }
-        }
-
         /* MAP SECTION - Restored "Gray Bar" look */
         .map-section {
             background: #000;
@@ -572,9 +509,9 @@
             </p>
 
             <div class="media-column">
-                <!-- 1. VIDEO (Größer/Breiter ziehen) -->
-                <div class="video-group"> <!-- Wrapper for spacing only -->
-                    <div class="media-item-large"> <!-- This one clips the video -->
+                <!-- 1. VIDEO -->
+                <div class="video-group">
+                    <div class="media-item-large">
                         <video controls
                             poster="https://images.tagesschau.de/image/d4ac8485-18bf-4c87-b4b7-68568036b949/AAABmSmxypc/AAABmyZEoeA/16x9-1920/grand-ethiopian-renaissance-dam-102.jpg">
                             <source
@@ -586,12 +523,9 @@
                     <p class="caption">Tagesschau: Neuer Mega-Staudamm entzweit Nil-Anrainer</p>
                 </div>
 
-                <!-- 2. PODCAST (Minimalist: Title + Bar only) -->
+                <!-- 2. PODCAST -->
                 <div class="podcast-minimalist-wrapper">
-                    <!-- Left aligned title -->
                     <h4 class="podcast-title-simple">Tagesschau Podcast</h4>
-
-                    <!-- Simpler Player Bar -->
                     <div class="audio-player-simple">
                         <audio controls>
                             <source
@@ -621,26 +555,21 @@
             </div>
         </section>
 
-
-
     </main>
 
     <script>
         // --- MAP LOGIC ---
         function openMap() {
-            // Native Navigation: Navigate to the map page
             window.location.href = "1.html";
         }
 
         // --- ANIMATION LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Animation Observer (Re-Triggerable)
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
                     } else {
-                        // Remove class to allow re-triggering animation on next scroll
                         entry.target.classList.remove('active');
                     }
                 });
@@ -649,7 +578,6 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
             const onScroll = () => {
-                // Hero Parallax Logic
                 const scroll = window.scrollY;
                 const heroH = document.querySelector('.hero-scroll-container').offsetHeight;
                 const winH = window.innerHeight;
@@ -669,7 +597,6 @@
                 }
             };
 
-            // Canvas Init
             const canvas = document.getElementById('hero-canvas');
             const ctx = canvas ? canvas.getContext('2d') : null;
             const images = [];
@@ -686,7 +613,7 @@
                         images.push(img);
                     }
                 };
-                loadImages(); // Start loading
+                loadImages();
             }
 
             const render = (idx) => {
@@ -695,7 +622,6 @@
                 const cW = canvas.width; const cH = canvas.height;
                 const iW = img.width; const iH = img.height;
 
-                // Cover Logic
                 let dW, dH, oX, oY;
                 if (cW / cH > iW / iH) {
                     dW = cW; dH = cW * (iH / iW);
