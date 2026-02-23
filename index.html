@@ -357,24 +357,36 @@
         /* ===== iOS / iPad / Mobile Touch-Device Fixes ===== */
         @supports (-webkit-touch-callout: none) {
 
-            /* FIX 1: Video player — iOS native controls (PiP, volume, fullscreen)
-               get clipped by border-radius + overflow:hidden on the container.
-               Solution: Remove ALL rounding and clipping on iOS. The native 
-               iOS video player already looks clean without forced rounding. */
+            /* FIX 1: Video player — iOS positions native controls (PiP, volume)
+               right at the video edge, unlike Mac which adds internal padding.
+               With rounded corners + overflow:hidden, those edge icons get clipped.
+               
+               Solution: Keep the rounded container, but add a small dark frame
+               (margin on the video) that pushes the video + all its controls 
+               INWARD, away from the clipped corners. The icons at ~12px from 
+               video edge end up ~18px from container edge, safely past the 
+               16px border-radius curve. */
             .media-item-large {
-                border-radius: 0 !important;
-                overflow: visible !important;
+                border-radius: 16px;
+                overflow: hidden;
+                background: #000;
                 box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             }
 
             .media-item-large video {
-                border-radius: 0 !important;
+                border-radius: 0;
+                margin: 6px;
+                width: calc(100% - 12px);
+                display: block;
             }
 
             /* FIX 2: Audio player — iOS native controls panel ignores CSS 
-               border-radius, causing ugly square corners. Solution: The wrapper 
-               container acts as a hard clipping mask. Audio element gets NO 
-               radius; the container does all the rounding via overflow:hidden. */
+               border-radius, showing ugly square corners at the bottom.
+               
+               Solution: The wrapper container does all the clipping with
+               overflow:hidden + border-radius. The audio element itself has
+               NO border-radius, so its native controls panel fills edge-to-edge
+               and gets cleanly cropped by the container's rounded shape. */
             .audio-player-simple {
                 background: #F5F5F7;
                 border-radius: 27px;
@@ -390,9 +402,9 @@
                 -webkit-appearance: none;
                 appearance: none;
                 display: block;
+                background: #F5F5F7;
             }
 
-            /* Force the native controls panel to fill the container without its own rounding */
             .audio-player-simple audio::-webkit-media-controls-panel {
                 background-color: #F5F5F7;
                 border-radius: 0 !important;
