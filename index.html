@@ -36,8 +36,10 @@
         /* HERO SECTION */
         .hero-scroll-container {
             height: 300vh;
+            /* Smooth scroll length */
             position: relative;
             background: #111;
+            /* Fallback */
         }
 
         .hero-sticky {
@@ -62,6 +64,7 @@
             z-index: 1;
         }
 
+        /* Fallback BG */
         .hero-fallback-bg {
             position: absolute;
             top: 0;
@@ -155,6 +158,7 @@
 
         .container {
             max-width: 1200px;
+            /* Increased from 980px to fit 3 cards comfortably */
             margin: 0 auto;
             padding: 120px 40px;
         }
@@ -180,10 +184,13 @@
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
+            /* Force 3 columns */
             gap: 24px;
+            /* Slightly reduced gap to make them fit nicely */
             margin-top: 60px;
         }
 
+        /* Responsive: Stack on smaller screens */
         @media(max-width: 900px) {
             .cards-grid {
                 grid-template-columns: 1fr;
@@ -194,6 +201,7 @@
             background: #FFFFFF;
             border-radius: 30px;
             padding: 32px;
+            /* Reduced from 48px to save space for 3-col layout */
             box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.06);
             transition: 0.3s;
         }
@@ -224,27 +232,35 @@
             display: flex;
             flex-direction: column;
             gap: 80px;
+            /* Space between Video and Podcast */
             max-width: 800px;
             margin: 0 auto;
         }
 
         .video-group {
             width: 100%;
+            /* Just a structural wrapper */
         }
 
         .media-item-large {
             width: 100%;
             border-radius: 24px;
+            /* Ensure container has radius */
             overflow: hidden;
+            /* Crop any square children (video) */
             background: transparent;
+            /* No background color */
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            /* Shadow on the clipped container */
         }
 
         .media-item-large video {
             width: 100%;
             height: auto;
             border-radius: 24px;
+            /* Match container */
             display: block;
+            /* Remove inline gap */
             background: #000;
             box-shadow: none;
         }
@@ -256,6 +272,7 @@
             font-weight: 500;
         }
 
+        /* PODCAST - Vertical Stack */
         .podcast-container {
             background: #fff;
             padding: 40px;
@@ -264,6 +281,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             max-width: 600px;
             margin: 0 auto;
+            /* Center the podcast card */
         }
 
         .podcast-header-vertical {
@@ -280,25 +298,32 @@
             margin-bottom: 8px;
         }
 
+        /* PODCAST - Minimalist Stack */
         .podcast-minimalist-wrapper {
             max-width: 700px;
+            /* Widened to 700px */
             margin: 0 auto;
             text-align: left;
             width: 100%;
             background: transparent !important;
+            /* Force transparency */
             box-shadow: none !important;
         }
 
         .podcast-title-simple {
             font-size: 32px;
+            /* Increased from 28px */
             font-weight: 600;
+            /* Apple often uses 600 for headers */
             letter-spacing: -0.01em;
+            /* Tighter tracking */
             color: #1d1d1f;
             margin-bottom: 16px;
             margin-left: 16px;
+            /* Align with rounded corner start */
         }
 
-        /* Audio Player */
+        /* Audio Player - Ultra Minimalist */
         .audio-player-simple audio {
             width: 100%;
             height: 54px;
@@ -307,6 +332,7 @@
             outline: none;
         }
 
+        /* Hiding specific controls to keep ONLY Play + Timeline + Time */
         audio::-webkit-media-controls-volume-control-container,
         audio::-webkit-media-controls-mute-button,
         audio::-webkit-media-controls-airplay-button,
@@ -320,6 +346,7 @@
             width: 0 !important;
         }
 
+        /* Ensure the panel itself is minimalist */
         audio::-webkit-media-controls-panel {
             background-color: #F5F5F7;
         }
@@ -327,8 +354,8 @@
         /* ===== iOS / iPad / Mobile Touch-Device Fixes ===== */
         @supports (-webkit-touch-callout: none) {
 
-            /* FIX 1: Video — smaller border-radius on iOS so native controls
-               in the corners (PiP, volume) don't get clipped. No padding needed. */
+            /* FIX 1: Video — smaller border-radius so native iOS controls
+               in the corners don't get clipped. */
             .media-item-large {
                 border-radius: 12px;
                 overflow: hidden;
@@ -338,6 +365,23 @@
                 border-radius: 0;
                 display: block;
                 width: 100%;
+            }
+
+            /* Scrubber dot/thumb on video timeline */
+            video::-webkit-media-controls-timeline {
+                -webkit-appearance: none;
+                padding: 4px 0;
+            }
+
+            video::-webkit-slider-thumb,
+            video::-webkit-media-slider-container thumb {
+                -webkit-appearance: none;
+                appearance: none;
+                width: 14px;
+                height: 14px;
+                border-radius: 50%;
+                background: #ffffff;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
             }
 
             /* FIX 2: Audio player — container clips the native controls panel
@@ -370,12 +414,13 @@
             }
         }
 
-        /* MAP SECTION */
+        /* MAP SECTION - Restored "Gray Bar" look */
         .map-section {
             background: #000;
             color: #fff;
             padding-top: 100px;
             padding-bottom: 0;
+            /* Removing bottom padding so it hits edge */
         }
 
         .map-preview-container {
@@ -440,6 +485,7 @@
         .reveal {
             opacity: 0;
             transform: scale(0.95) translateY(40px);
+            /* Slightly smaller start for "blopping" out effect */
             transition: opacity 0.8s var(--ease-out-cubic), transform 0.8s var(--ease-out-cubic);
         }
 
@@ -478,6 +524,7 @@
 
     <main>
 
+        <!-- TEXTS RESTORED TO ORIGINAL LENGTH -->
         <section class="container reveal">
             <h2 class="section-title">Worum geht es?</h2>
             <p class="body-text" style="text-align: center; max-width: 700px; margin: 0 auto 60px auto;">
@@ -515,17 +562,19 @@
             </div>
         </section>
 
-        <!-- MEDIATHEK -->
+        <!-- MEDIATHEK - MINIMALIST LAYOUT -->
         <section class="container reveal" style="padding-top: 0;">
             <h2 class="section-title" style="margin-bottom: 20px; margin-top: -80px;">Mediathek</h2>
+            <!-- Pulled up MAX amount (-80px) -->
             <p class="body-text"
                 style="text-align: center; margin-bottom: 60px; color: #86868b; font-size:28px; font-weight:500;">
                 Tiefere Einblicke in den Konflikt.
             </p>
 
             <div class="media-column">
-                <div class="video-group">
-                    <div class="media-item-large">
+                <!-- 1. VIDEO (Größer/Breiter ziehen) -->
+                <div class="video-group"> <!-- Wrapper for spacing only -->
+                    <div class="media-item-large"> <!-- This one clips the video -->
                         <video controls
                             poster="https://images.tagesschau.de/image/d4ac8485-18bf-4c87-b4b7-68568036b949/AAABmSmxypc/AAABmyZEoeA/16x9-1920/grand-ethiopian-renaissance-dam-102.jpg">
                             <source
@@ -537,8 +586,12 @@
                     <p class="caption">Tagesschau: Neuer Mega-Staudamm entzweit Nil-Anrainer</p>
                 </div>
 
+                <!-- 2. PODCAST (Minimalist: Title + Bar only) -->
                 <div class="podcast-minimalist-wrapper">
+                    <!-- Left aligned title -->
                     <h4 class="podcast-title-simple">Tagesschau Podcast</h4>
+
+                    <!-- Simpler Player Bar -->
                     <div class="audio-player-simple">
                         <audio controls>
                             <source
@@ -568,19 +621,26 @@
             </div>
         </section>
 
+
+
     </main>
 
     <script>
+        // --- MAP LOGIC ---
         function openMap() {
+            // Native Navigation: Navigate to the map page
             window.location.href = "1.html";
         }
 
+        // --- ANIMATION LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
+            // Animation Observer (Re-Triggerable)
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
                     } else {
+                        // Remove class to allow re-triggering animation on next scroll
                         entry.target.classList.remove('active');
                     }
                 });
@@ -589,6 +649,7 @@
             document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
             const onScroll = () => {
+                // Hero Parallax Logic
                 const scroll = window.scrollY;
                 const heroH = document.querySelector('.hero-scroll-container').offsetHeight;
                 const winH = window.innerHeight;
@@ -608,6 +669,7 @@
                 }
             };
 
+            // Canvas Init
             const canvas = document.getElementById('hero-canvas');
             const ctx = canvas ? canvas.getContext('2d') : null;
             const images = [];
@@ -624,7 +686,7 @@
                         images.push(img);
                     }
                 };
-                loadImages();
+                loadImages(); // Start loading
             }
 
             const render = (idx) => {
@@ -633,6 +695,7 @@
                 const cW = canvas.width; const cH = canvas.height;
                 const iW = img.width; const iH = img.height;
 
+                // Cover Logic
                 let dW, dH, oX, oY;
                 if (cW / cH > iW / iH) {
                     dW = cW; dH = cW * (iH / iW);
