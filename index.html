@@ -355,42 +355,51 @@
         }
 
         /* ===== iOS / iPad / Mobile Touch-Device Fixes ===== */
-        /* Fix 1: Video player icons clipped by border-radius on touch devices */
         @supports (-webkit-touch-callout: none) {
 
-            /* On iOS, remove border-radius from the video itself.
-               The container .media-item-large still clips with its own radius. */
-            .media-item-large video {
-                border-radius: 0;
-            }
-
-            /* Add slight inset so native controls (PiP, volume, fullscreen)
-               don't get hidden behind the rounded corners of the container */
+            /* FIX 1: Video player — iOS native controls (PiP, volume, fullscreen)
+               get clipped by border-radius + overflow:hidden on the container.
+               Solution: Remove ALL rounding and clipping on iOS. The native 
+               iOS video player already looks clean without forced rounding. */
             .media-item-large {
-                border-radius: 20px;
-                /* Slightly tighter radius so controls clear the curve */
+                border-radius: 0 !important;
+                overflow: visible !important;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
             }
 
-            video::-webkit-media-controls-enclosure {
-                border-radius: 0 0 20px 20px;
+            .media-item-large video {
+                border-radius: 0 !important;
             }
 
-            /* Fix 2: Audio player bottom corners on iOS */
+            /* FIX 2: Audio player — iOS native controls panel ignores CSS 
+               border-radius, causing ugly square corners. Solution: The wrapper 
+               container acts as a hard clipping mask. Audio element gets NO 
+               radius; the container does all the rounding via overflow:hidden. */
             .audio-player-simple {
                 background: #F5F5F7;
                 border-radius: 27px;
                 overflow: hidden;
+                height: 54px;
+                position: relative;
             }
 
             .audio-player-simple audio {
-                border-radius: 27px;
+                width: 100%;
+                height: 54px;
+                border-radius: 0 !important;
                 -webkit-appearance: none;
                 appearance: none;
+                display: block;
             }
 
-            audio::-webkit-media-controls-panel {
+            /* Force the native controls panel to fill the container without its own rounding */
+            .audio-player-simple audio::-webkit-media-controls-panel {
                 background-color: #F5F5F7;
-                border-radius: 27px;
+                border-radius: 0 !important;
+            }
+
+            .audio-player-simple audio::-webkit-media-controls-enclosure {
+                border-radius: 0 !important;
             }
         }
 
