@@ -36,10 +36,8 @@
         /* HERO SECTION */
         .hero-scroll-container {
             height: 300vh;
-            /* Smooth scroll length */
             position: relative;
             background: #111;
-            /* Fallback */
         }
 
         .hero-sticky {
@@ -64,7 +62,6 @@
             z-index: 1;
         }
 
-        /* Fallback BG */
         .hero-fallback-bg {
             position: absolute;
             top: 0;
@@ -259,7 +256,6 @@
             font-weight: 500;
         }
 
-        /* PODCAST - Vertical Stack */
         .podcast-container {
             background: #fff;
             padding: 40px;
@@ -284,7 +280,6 @@
             margin-bottom: 8px;
         }
 
-        /* PODCAST - Minimalist Stack */
         .podcast-minimalist-wrapper {
             max-width: 700px;
             margin: 0 auto;
@@ -303,7 +298,7 @@
             margin-left: 16px;
         }
 
-        /* Audio Player - Ultra Minimalist */
+        /* Audio Player */
         .audio-player-simple audio {
             width: 100%;
             height: 54px;
@@ -312,7 +307,6 @@
             outline: none;
         }
 
-        /* Hiding specific controls to keep ONLY Play + Timeline + Time */
         audio::-webkit-media-controls-volume-control-container,
         audio::-webkit-media-controls-mute-button,
         audio::-webkit-media-controls-airplay-button,
@@ -326,7 +320,6 @@
             width: 0 !important;
         }
 
-        /* Ensure the panel itself is minimalist */
         audio::-webkit-media-controls-panel {
             background-color: #F5F5F7;
         }
@@ -334,44 +327,25 @@
         /* ===== iOS / iPad / Mobile Touch-Device Fixes ===== */
         @supports (-webkit-touch-callout: none) {
 
-            /* FIX 1: Video — keep full-size with rounded corners like Mac.
-               Use webkit pseudo-elements to nudge the native controls inward
-               so they don't sit right at the clipped edges. */
+            /* FIX 1: Video — the native iOS controls sit right at the video edges.
+               Container padding in the page background color (#F5F5F7) pushes 
+               the video inward so controls clear the rounded corners.
+               The padding is invisible because it matches the page background. */
             .media-item-large {
-                border-radius: 24px;
+                border-radius: 20px;
                 overflow: hidden;
+                background: #F5F5F7;
+                padding: 3px;
             }
 
             .media-item-large video {
-                border-radius: 0;
+                border-radius: 17px;
                 display: block;
+                width: 100%;
             }
 
-            /* Push all controls inward with padding on the enclosure */
-            video::-webkit-media-controls-enclosure {
-                padding: 8px;
-            }
-
-            /* Ensure the scrubber dot/thumb is visible on the timeline */
-            video::-webkit-media-controls-timeline {
-                -webkit-appearance: none;
-                height: 6px;
-                border-radius: 3px;
-            }
-
-            video::-webkit-slider-thumb {
-                -webkit-appearance: none;
-                appearance: none;
-                width: 16px;
-                height: 16px;
-                border-radius: 50%;
-                background: #ffffff;
-                box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
-                cursor: pointer;
-            }
-
-            /* FIX 2: Audio player — container clips with overflow:hidden 
-               so native controls panel gets cleanly cropped to rounded shape. */
+            /* FIX 2: Audio player — container clips the native controls panel
+               to a rounded shape via overflow:hidden. */
             .audio-player-simple {
                 background: #F5F5F7;
                 border-radius: 27px;
@@ -400,7 +374,7 @@
             }
         }
 
-        /* MAP SECTION - Restored "Gray Bar" look */
+        /* MAP SECTION */
         .map-section {
             background: #000;
             color: #fff;
@@ -545,7 +519,7 @@
             </div>
         </section>
 
-        <!-- MEDIATHEK - MINIMALIST LAYOUT -->
+        <!-- MEDIATHEK -->
         <section class="container reveal" style="padding-top: 0;">
             <h2 class="section-title" style="margin-bottom: 20px; margin-top: -80px;">Mediathek</h2>
             <p class="body-text"
@@ -601,12 +575,10 @@
     </main>
 
     <script>
-        // --- MAP LOGIC ---
         function openMap() {
             window.location.href = "1.html";
         }
 
-        // --- ANIMATION LOGIC ---
         document.addEventListener('DOMContentLoaded', () => {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
