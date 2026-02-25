@@ -257,8 +257,7 @@
         .media-item-large video {
             width: 100%;
             height: auto;
-            border-radius: 24px;
-            /* Match container */
+            /* border-radius removed to fix native iOS video scrubber missing dot */
             display: block;
             /* Remove inline gap */
             background: #000;
@@ -353,6 +352,9 @@
         audio::-webkit-media-controls-panel {
             background-color: #F5F5F7;
         }
+
+
+
 
         /* MAP SECTION - Restored "Gray Bar" look */
         .map-section {
