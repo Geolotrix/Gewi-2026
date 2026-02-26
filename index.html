@@ -5,6 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Der Konflikt am Nil</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BP029N3ZFT"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-BP029N3ZFT');
+    </script>
     <style>
         :root {
             --system-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -227,6 +236,21 @@
             line-height: 1.2;
         }
 
+        /* MEDIA SECTION - Vertical Layout */
+        .media-column {
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+            /* Space between Video and Podcast */
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .video-group {
+            width: 100%;
+            /* Just a structural wrapper */
+        }
+
         /* MEDIA SECTION - Custom Player Updates */
         .media-column {
             display: flex;
@@ -277,6 +301,11 @@
         .custom-video-wrapper:hover .custom-video-controls,
         .custom-video-wrapper.active .custom-video-controls,
         .custom-video-wrapper.paused .custom-video-controls {
+            opacity: 1;
+        }
+
+        .custom-video-wrapper.paused .custom-video-controls,
+        .custom-video-wrapper:hover .custom-video-controls {
             opacity: 1;
         }
 
@@ -331,11 +360,11 @@
         }
 
         input[type=range].video-slider {
-            background: linear-gradient(to right, white var(--val, 0%), rgba(255,255,255,0.3) var(--val, 0%));
+            background: linear-gradient(to right, white var(--val, 0%), rgba(255, 255, 255, 0.3) var(--val, 0%));
         }
 
         input[type=range].audio-slider {
-            background: linear-gradient(to right, #1D1D1F var(--val, 0%), rgba(0,0,0,0.08) var(--val, 0%));
+            background: linear-gradient(to right, #1D1D1F var(--val, 0%), rgba(0, 0, 0, 0.08) var(--val, 0%));
         }
 
         input[type=range].custom-slider::-webkit-slider-thumb {
@@ -344,7 +373,7 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
             transition: transform 0.1s;
         }
 
@@ -407,6 +436,9 @@
             color: #86868b;
             font-size: 14px;
         }
+
+
+
 
         /* MAP SECTION - Restored "Gray Bar" look */
         .map-section {
@@ -569,22 +601,33 @@
                 <!-- 1. VIDEO -->
                 <div class="video-group">
                     <div class="custom-video-wrapper paused">
-                        <video playsinline poster="https://images.tagesschau.de/image/d4ac8485-18bf-4c87-b4b7-68568036b949/AAABmSmxypc/AAABmyZEoeA/16x9-1920/grand-ethiopian-renaissance-dam-102.jpg">
-                            <source src="https://tagesschau-progressive.ard-mcdn.de/video/2025/0909/TV-20250909-0905-0500.webxxl.h264.mp4" type="video/mp4">
+                        <video playsinline
+                            poster="https://images.tagesschau.de/image/d4ac8485-18bf-4c87-b4b7-68568036b949/AAABmSmxypc/AAABmyZEoeA/16x9-1920/grand-ethiopian-renaissance-dam-102.jpg">
+                            <source
+                                src="https://tagesschau-progressive.ard-mcdn.de/video/2025/0909/TV-20250909-0905-0500.webxxl.h264.mp4"
+                                type="video/mp4">
                             Ihr Browser unterstützt das Video-Tag nicht.
                         </video>
                         <div class="custom-video-controls">
                             <button class="ctrl-btn play-pause-btn" aria-label="Play/Pause">
-                                <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                <svg class="icon-pause" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                                <svg class="icon-play" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                </svg>
+                                <svg class="icon-pause" viewBox="0 0 24 24" style="display:none;">
+                                    <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                                </svg>
                             </button>
                             <span class="time-text current-time">0:00</span>
                             <div class="progress-container">
-                                <input type="range" class="custom-slider video-slider" value="0" step="0.1" min="0" max="100">
+                                <input type="range" class="custom-slider video-slider" value="0" step="0.1" min="0"
+                                    max="100">
                             </div>
                             <span class="time-text total-time">0:00</span>
                             <button class="ctrl-btn fullscreen-btn" aria-label="Vollbild">
-                                <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                                <svg viewBox="0 0 24 24">
+                                    <path
+                                        d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+                                </svg>
                             </button>
                         </div>
                     </div>
@@ -596,15 +639,22 @@
                     <h4 class="podcast-title-simple">Tagesschau Podcast</h4>
                     <div class="custom-audio-wrapper paused">
                         <audio preload="metadata">
-                            <source src="https://tagesschau-podcast.ard-mcdn.de/audio/2025/0909/AU-20250909-0700-1100.mp3" type="audio/mpeg">
+                            <source
+                                src="https://tagesschau-podcast.ard-mcdn.de/audio/2025/0909/AU-20250909-0700-1100.mp3"
+                                type="audio/mpeg">
                         </audio>
                         <button class="ctrl-btn play-pause-btn" aria-label="Play/Pause">
-                            <svg class="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                            <svg class="icon-pause" viewBox="0 0 24 24" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                            <svg class="icon-play" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                            <svg class="icon-pause" viewBox="0 0 24 24" style="display:none;">
+                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                            </svg>
                         </button>
                         <span class="time-text current-time">0:00</span>
                         <div class="progress-container">
-                            <input type="range" class="custom-slider audio-slider" value="0" step="0.1" min="0" max="100">
+                            <input type="range" class="custom-slider audio-slider" value="0" step="0.1" min="0"
+                                max="100">
                         </div>
                         <span class="time-text total-time">0:00</span>
                     </div>
